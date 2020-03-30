@@ -20,23 +20,7 @@ public class NextApAdapter extends RecyclerView.Adapter<NextApAdapter.ViewHolder
     private List<AccessPoint> accessPointList;
 
     public NextApAdapter(List<AccessPoint> aps) {
-        this.accessPointList = sortApList(aps);
-    }
-
-    private List<AccessPoint> sortApList(List<AccessPoint> apList) {
-        for (AccessPoint ap : apList) {
-            //float distance = NextApFragment.myLocationListener.myLocation.distanceTo(ap.getLocation()) / 1000;
-            //ap.setDistance((int) distance / 1000);
-        }
-
-        Collections.sort(apList, new Comparator<AccessPoint>() {
-            @Override
-            public int compare(AccessPoint o1, AccessPoint o2) {
-                return Integer.compare(o1.getDistance(), o2.getDistance());
-            }
-        });
-
-        return apList;
+        this.accessPointList = aps;
     }
 
     @NonNull

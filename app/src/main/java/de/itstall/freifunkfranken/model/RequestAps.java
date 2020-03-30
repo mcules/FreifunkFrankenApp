@@ -11,6 +11,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -55,7 +57,26 @@ public class RequestAps {
         }
     }
 
-    public List<AccessPoint> getAccessPointList() {
-        return accessPointList;
+    public List<AccessPoint> getSortedList(boolean showOffline) {
+        List<AccessPoint> newList = new ArrayList<>();
+
+        for (AccessPoint ap : accessPointList) {
+            if(showOffline) {
+                //float distance = NextApFragment.myLocationListener.myLocation.distanceTo(ap.getLocation()) / 1000;
+                //ap.setDistance((int) distance / 1000);
+                newList.add(ap);
+            } else {
+                if(ap.isOnline()) newList.add(ap);
+            }
+        }
+
+        Collections.sort(newList, new Comparator<AccessPoint>() {
+            @Override
+            public int compare(AccessPoint o1, AccessPoint o2) {
+                return Integer.compare(o1.getDistance(), o2.getDistance());
+            }
+        });
+
+        return newList;
     }
 }

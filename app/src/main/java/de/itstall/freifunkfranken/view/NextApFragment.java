@@ -1,5 +1,6 @@
 package de.itstall.freifunkfranken.view;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +25,7 @@ public class NextApFragment extends Fragment {
     private RecyclerView rvAps;
     private View rootView;
     private TextView tvTemp;
-    //public MyLocationListener myLocationListener;
+    private SharedPreferences sharedPreferences;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,13 +36,14 @@ public class NextApFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.nextap_fragment, container, false);
 
-        //myLocationListener = new MyLocationListener(rootView);
+        sharedPreferences = rootView.getContext().getSharedPreferences("FreifunkFrankenApp", 0);
+
 
         rvAps = rootView.findViewById(R.id.rvAps);
         rvAps.setLayoutManager(new LinearLayoutManager(getActivity()));
         tvTemp = rootView.findViewById(R.id.tvTemp);
 
-        List<AccessPoint> accessPointList = new RequestAps(Objects.requireNonNull(this.getContext())).getAccessPointList();
+        List<AccessPoint> accessPointList = new RequestAps(Objects.requireNonNull(this.getContext())).getSortedList(sharedPreferences.getBoolean("OfflineRouter", false));
         showApList(accessPointList);
 
         return rootView;

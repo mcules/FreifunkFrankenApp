@@ -1,5 +1,6 @@
 package de.itstall.freifunkfranken.view;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,9 +28,9 @@ import de.itstall.freifunkfranken.model.RequestAps;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private static final String TAG = MapsFragment.class.getSimpleName();
-    static MyLocationListener myLocationListener;
     private GoogleMap mMap;
     private View rootView;
+    private SharedPreferences sharedPreferences;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,11 +41,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.maps_fragment, container, false);
 
-        //myLocationListener = new MyLocationListener(rootView);
-        //myLocationListener.getLocation();
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapFragment);
         if (mapFragment != null) mapFragment.getMapAsync(this);
+
+        sharedPreferences = rootView.getContext().getSharedPreferences("FreifunkFrankenApp", 0);
 
         return rootView;
     }
@@ -53,14 +54,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Turn on the My Location layer and the related control on the map.
         updateLocationUI();
-
-        // Get the current location of the device and set the position of the map.
         getDeviceLocation();
 
         LatLng schonungen = new LatLng(50.0544, 10.3128);
-        mMap.addMarker(new MarkerOptions().position(schonungen).title("Marker in Schonungen"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(schonungen, 10));
         mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
             @Override
@@ -73,13 +70,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void showApsOnMap() {
-        List<AccessPoint> accessPointList = new RequestAps(Objects.requireNonNull(this.getContext())).getAccessPointList();
+        List<AccessPoint> accessPointList = new RequestAps(Objects.requireNonNull(this.getContext())).getSortedList(sharedPreferences.getBoolean("MapOfflineRouter", false));
+
         for(int i = 0; i < accessPointList.size(); i++) {
-            if(accessPointList.get(i).isOnline()) {
-                LatLng ap = new LatLng(accessPointList.get(i).getLat(), accessPointList.get(i).getLon());
-                MarkerOptions markerOptions = new MarkerOptions().position(ap).title(accessPointList.get(i).getName());
-                mMap.addMarker(markerOptions);
-            }
+            LatLng ap = new LatLng(accessPointList.get(i).getLat(), accessPointList.get(i).getLon());
+            MarkerOptions markerOptions = new MarkerOptions().position(ap).title(accessPointList.get(i).getName());
+            if(accessPointList.get(i).isOnline()) markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+            else markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+            mMap.addMarker(markerOptions);
         }
     }
 

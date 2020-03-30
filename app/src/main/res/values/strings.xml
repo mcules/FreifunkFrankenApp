@@ -25,4 +25,7 @@
     <string name="settingsTvOfflineRouter">Zeige offline Router an</string>
     <string name="settingsTvRouterCount">Anzahl der anzuzeigenden Router</string>
     <string name="count">Anzahl</string>
+    <string name="settingsTvNextRouter">Nächste Router</string>
+    <string name="settingsSwMapOfflineRouter">Zeige offline Router an</string>
+    <string name="settingsTvMap">Karte</string>
 </resources>
