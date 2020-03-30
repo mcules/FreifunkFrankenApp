@@ -1,4 +1,4 @@
-package de.itstall.freifunkfranken.model;
+package de.itstall.freifunkfranken.controller;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Objects;
 
 import de.itstall.freifunkfranken.controller.SsidsAdapter;
+import de.itstall.freifunkfranken.model.Ssid;
 
 public class RequestSsids {
     private List<Ssid> ssidList = new ArrayList<>();

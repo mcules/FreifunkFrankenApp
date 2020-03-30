@@ -36,6 +36,7 @@ public class MyLocationListener {
                 && ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_GRANTED) {
         }
+        ActivityCompat.requestPermissions(mainActivity, new String[] { Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_NETWORK_STATE }, 1);
 
         try {
             gps_loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -57,7 +58,6 @@ public class MyLocationListener {
             longitude = 0.0;
         }
 
-        ActivityCompat.requestPermissions(mainActivity, new String[] { Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_NETWORK_STATE }, 1);
 
         //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mLocationListener);
         //locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);

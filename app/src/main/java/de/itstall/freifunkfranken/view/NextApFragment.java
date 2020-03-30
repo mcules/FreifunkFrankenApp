@@ -16,10 +16,9 @@ import java.util.List;
 import java.util.Objects;
 
 import de.itstall.freifunkfranken.R;
-import de.itstall.freifunkfranken.controller.MyLocationListener;
 import de.itstall.freifunkfranken.controller.NextApAdapter;
 import de.itstall.freifunkfranken.model.AccessPoint;
-import de.itstall.freifunkfranken.model.RequestAps;
+import de.itstall.freifunkfranken.controller.RequestAps;
 
 public class NextApFragment extends Fragment {
     private RecyclerView rvAps;
@@ -43,7 +42,7 @@ public class NextApFragment extends Fragment {
         rvAps.setLayoutManager(new LinearLayoutManager(getActivity()));
         tvTemp = rootView.findViewById(R.id.tvTemp);
 
-        List<AccessPoint> accessPointList = new RequestAps(Objects.requireNonNull(this.getContext())).getSortedList(sharedPreferences.getBoolean("OfflineRouter", false));
+        List<AccessPoint> accessPointList = new RequestAps(Objects.requireNonNull(this.getContext())).getSortedList(sharedPreferences.getBoolean("OfflineRouter", false), sharedPreferences.getInt("RouterCount", 10));
         showApList(accessPointList);
 
         return rootView;

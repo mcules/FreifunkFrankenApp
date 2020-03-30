@@ -1,4 +1,4 @@
-package de.itstall.freifunkfranken.model;
+package de.itstall.freifunkfranken.controller;
 
 import android.content.Context;
 import android.util.Log;
@@ -15,6 +15,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+
+import de.itstall.freifunkfranken.model.AccessPoint;
 
 public class RequestAps {
     private List<AccessPoint> accessPointList = new ArrayList<>();
@@ -57,17 +59,23 @@ public class RequestAps {
         }
     }
 
-    public List<AccessPoint> getSortedList(boolean showOffline) {
+    public List<AccessPoint> getSortedList(boolean showOffline, int routerCount) {
         List<AccessPoint> newList = new ArrayList<>();
+        int counter = 0;
 
         for (AccessPoint ap : accessPointList) {
             if(showOffline) {
                 //float distance = NextApFragment.myLocationListener.myLocation.distanceTo(ap.getLocation()) / 1000;
                 //ap.setDistance((int) distance / 1000);
                 newList.add(ap);
+                counter++;
             } else {
-                if(ap.isOnline()) newList.add(ap);
+                if(ap.isOnline()) {
+                    newList.add(ap);
+                    counter++;
+                }
             }
+            if(routerCount > 0 && counter == routerCount) break;
         }
 
         Collections.sort(newList, new Comparator<AccessPoint>() {

@@ -1,11 +1,11 @@
 package de.itstall.freifunkfranken.view;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -18,15 +18,12 @@ import java.util.Objects;
 
 import de.itstall.freifunkfranken.R;
 import de.itstall.freifunkfranken.controller.FileDownloader;
-import de.itstall.freifunkfranken.controller.MyLocationListener;
 
 public class MainActivity extends AppCompatActivity {
     public Fragment fragment = null;
     public boolean downloadDone = false;
     TabLayout tabLayout;
-    MyLocationListener myLocationListener;
-    Button btnAboutClose;
-    //MainActivityListener mainActivityListener;
+    public static Location myLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,10 +68,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-        //btnAboutClose = findViewById(R.id.AboutBtnClose);
-        //btnAboutClose.setOnClickListener(mainActivityListener);
-
         downloadFiles();
     }
 
@@ -110,8 +103,6 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.frameLayout, fragment);
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         fragmentTransaction.commit();
-        //myLocationListener = new MyLocationListener(this);
-        //myLocationListener.getLocation();
     }
 
     @Override

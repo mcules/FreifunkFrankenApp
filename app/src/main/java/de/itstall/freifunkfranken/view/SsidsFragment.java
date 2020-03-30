@@ -13,9 +13,8 @@ import java.util.List;
 import java.util.Objects;
 
 import de.itstall.freifunkfranken.R;
-import de.itstall.freifunkfranken.controller.NextApAdapter;
 import de.itstall.freifunkfranken.controller.SsidsAdapter;
-import de.itstall.freifunkfranken.model.RequestSsids;
+import de.itstall.freifunkfranken.controller.RequestSsids;
 import de.itstall.freifunkfranken.model.Ssid;
 
 public class SsidsFragment extends androidx.fragment.app.Fragment {

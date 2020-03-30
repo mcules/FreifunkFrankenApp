@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -22,9 +21,8 @@ import java.util.List;
 import java.util.Objects;
 
 import de.itstall.freifunkfranken.R;
-import de.itstall.freifunkfranken.controller.MyLocationListener;
 import de.itstall.freifunkfranken.model.AccessPoint;
-import de.itstall.freifunkfranken.model.RequestAps;
+import de.itstall.freifunkfranken.controller.RequestAps;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private static final String TAG = MapsFragment.class.getSimpleName();
@@ -70,7 +68,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void showApsOnMap() {
-        List<AccessPoint> accessPointList = new RequestAps(Objects.requireNonNull(this.getContext())).getSortedList(sharedPreferences.getBoolean("MapOfflineRouter", false));
+        List<AccessPoint> accessPointList = new RequestAps(Objects.requireNonNull(this.getContext())).getSortedList(sharedPreferences.getBoolean("MapOfflineRouter", false), 0);
 
         for(int i = 0; i < accessPointList.size(); i++) {
             LatLng ap = new LatLng(accessPointList.get(i).getLat(), accessPointList.get(i).getLon());
