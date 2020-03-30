@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Freifunk Franken</string>
+    <string name="tabNextAp">Nächster AP</string>
+    <string name="tabSsids">SSIDs</string>
+    <string name="tabKarte">Karte</string>
+    <string name="btnSsidAdd">Hinzufügen</string>
+    <string name="tvStatusName">Status:</string>
+    <string name="statusOnline">Online</string>
+    <string name="statusOffline">Offline</string>
+    <string name="menuItemSettings">Einstellungen</string>
+    <string name="menuItemAbout">Info</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="btnClose">Schließen</string>
+    <string name="settingsTvOfflineRouter">Zeige offline Router an</string>
+    <string name="settingsTvRouterCount">Anzahl der anzuzeigenden Router</string>
+    <string name="count">Anzahl</string>
+</resources>

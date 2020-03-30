@@ -1,0 +1,49 @@
+package de.itstall.freifunkfranken.view;
+
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.List;
+import java.util.Objects;
+
+import de.itstall.freifunkfranken.R;
+import de.itstall.freifunkfranken.controller.NextApAdapter;
+import de.itstall.freifunkfranken.controller.SsidsAdapter;
+import de.itstall.freifunkfranken.model.RequestSsids;
+import de.itstall.freifunkfranken.model.Ssid;
+
+public class SsidsFragment extends androidx.fragment.app.Fragment {
+    private RecyclerView rvSsids;
+    private View rootView;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.ssids_fragment, container, false);
+        rvSsids = rootView.findViewById(R.id.rvSsids);
+        rvSsids.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        /*RequestSsids requestSsids = new RequestSsids(this);
+        AsyncTask runner = requestSsids.execute();*/
+
+        List<Ssid> ssidList = new RequestSsids(Objects.requireNonNull(this.getContext())).getSsidList();
+        showSsidList(ssidList);
+
+        return rootView;
+    }
+    private void showSsidList(List<Ssid> ssidList) {
+        SsidsAdapter ssidsAdapter = new SsidsAdapter(ssidList);
+        rvSsids.setAdapter(ssidsAdapter);
+        rvSsids.setItemAnimator(new DefaultItemAnimator());
+    }
+}
