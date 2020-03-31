@@ -45,7 +45,6 @@ public class RequestAps {
             AccessPoint ap;
             for (int i = 0; i < nodes.length(); i++) {
                 node = nodes.getJSONObject(i);
-                Log.i("node: ", node.getString("name"));
                 ap = new AccessPoint(
                         node.getString("name"),
                         node.getDouble("lat"),

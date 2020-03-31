@@ -3,6 +3,7 @@ package de.itstall.freifunkfranken.view;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -12,18 +13,21 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.Objects;
 
 import de.itstall.freifunkfranken.R;
 import de.itstall.freifunkfranken.controller.FileDownloader;
+import de.itstall.freifunkfranken.model.MyLocationProvider;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MyLocationProvider.LocationCallback {
+    public static final String TAG = MainActivity.class.getSimpleName();
     public Fragment fragment = null;
     public boolean downloadDone = false;
     TabLayout tabLayout;
-    public static Location myLocation;
+    private MyLocationProvider mLocationProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //mLocationProvider = new MyLocationProvider(this, this);
+
         downloadFiles();
     }
 
@@ -110,5 +116,20 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         Objects.requireNonNull(tabLayout.getTabAt(1)).select();
         Objects.requireNonNull(tabLayout.getTabAt(0)).select();
+        //mLocationProvider.connect();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //mLocationProvider.disconnect();
+    }
+
+    public void handleNewLocation(Location location) {
+        Log.d(TAG, location.toString());
+
+        double currentLatitude = location.getLatitude();
+        double currentLongitude = location.getLongitude();
+        LatLng latLng = new LatLng(currentLatitude, currentLongitude);
     }
 }

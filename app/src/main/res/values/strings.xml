@@ -11,16 +11,9 @@
     <string name="menuItemAbout">Info</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_settings">SettingsActivity</string>
     <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="btnClose">Schließen</string>
     <string name="settingsTvOfflineRouter">Zeige offline Router an</string>
     <string name="settingsTvRouterCount">Anzahl der anzuzeigenden Router</string>
@@ -28,4 +21,16 @@
     <string name="settingsTvNextRouter">Nächste Router</string>
     <string name="settingsSwMapOfflineRouter">Zeige offline Router an</string>
     <string name="settingsTvMap">Karte</string>
+    <string name="aboutTvLizences">Lizenzen:</string>
+    <string name="aboutTvAppLizence">
+        &lt;ul&gt;
+            &lt;li&gt;
+                &amp;nbsp;&amp;copy; 2020 Dennis Eisold, lizensiert unter GNU GPLv3&lt;br/&gt;
+                &amp;nbsp;Quellcode auf &lt;a href="https://www.gitrepo.de/freifunk/freifunkfrankenapp"&gt;gitrepo.de&lt;/a&gt;
+            &lt;/li&gt;
+            &lt;li&gt;&amp;nbsp;Freifunk Logo von &lt;a href="https://wiki.freifunk.net/Freifunk-Styles#Logo"&gt;freifunk.net&lt;/a&gt; lizenziert unter CC BY-SA 3.0&lt;/li&gt;
+        &lt;/ul&gt;
+    </string>
+    <string name="aboutTvTitle">Über die Freifunk Franken App</string>
+    <string name="popupWritePermissionFragmentTitle">Zugriff benötigt</string>
 </resources>

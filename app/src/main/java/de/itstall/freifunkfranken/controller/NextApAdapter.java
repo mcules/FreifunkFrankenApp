@@ -9,8 +9,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import de.itstall.freifunkfranken.R;
@@ -26,7 +24,7 @@ public class NextApAdapter extends RecyclerView.Adapter<NextApAdapter.ViewHolder
     @NonNull
     @Override
     public NextApAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        @SuppressLint("InflateParams") View viewApsItem = LayoutInflater.from(parent.getContext()).inflate(R.layout.aps_item, null);
+        @SuppressLint("InflateParams") View viewApsItem = LayoutInflater.from(parent.getContext()).inflate(R.layout.nextap_item, null);
 
         return new ViewHolder(viewApsItem);
     }

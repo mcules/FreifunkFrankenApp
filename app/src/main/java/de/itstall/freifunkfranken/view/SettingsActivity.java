@@ -24,12 +24,12 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
         sharedPreferences = getApplicationContext().getSharedPreferences("FreifunkFrankenApp", 0);
-        settingsSwOfflineRouter = (Switch) findViewById(R.id.settingsSwOfflineRouter);
-        settingsSwMapOfflineRouter = (Switch) findViewById(R.id.settingsSwMapOfflineRouter);
-        settingsTxtRouterCount = (EditText) findViewById(R.id.settingsTxtRouterCount);
+        settingsSwOfflineRouter = findViewById(R.id.settingsSwOfflineRouter);
+        settingsSwMapOfflineRouter = findViewById(R.id.settingsSwMapOfflineRouter);
+        settingsTxtRouterCount = findViewById(R.id.settingsTxtRouterCount);
 
         settingsTxtRouterCount.setText(String.valueOf(sharedPreferences.getInt("RouterCount", 10)));
-        settingsBtnClose = (Button) findViewById(R.id.SettingsBtnClose);
+        settingsBtnClose = findViewById(R.id.SettingsBtnClose);
         settingsSwOfflineRouter.setChecked(sharedPreferences.getBoolean("OfflineRouter", false));
         settingsSwMapOfflineRouter.setChecked(sharedPreferences.getBoolean("MapOfflineRouter", false));
         settingsBtnClose.setOnClickListener(new View.OnClickListener() {
