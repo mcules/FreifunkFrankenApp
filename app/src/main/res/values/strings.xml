@@ -5,14 +5,13 @@
     <string name="tabKarte">Karte</string>
     <string name="tabNews">News</string>
     <string name="btnSsidAdd">Hinzufügen</string>
-    <string name="tvStatusName">Status:</string>
+    <string name="nextApTvStatusLabel">Status:</string>
     <string name="statusOnline">Online</string>
     <string name="statusOffline">Offline</string>
     <string name="menuItemSettings">Einstellungen</string>
     <string name="menuItemAbout">Info</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="title_activity_settings">SettingsActivity</string>
     <!-- Strings used for fragments for navigation -->
 
     <string name="btnClose">Schließen</string>
@@ -33,8 +32,10 @@
         &lt;/ul&gt;
     </string>
     <string name="aboutTvTitle">Über die Freifunk Franken App</string>
-    <string name="popupWritePermissionFragmentTitle">Zugriff benötigt</string>
     <string name="newsTvDescription">Meine lange Beschreibung</string>
     <string name="newsTvTitle">Mein Titel</string>
     <string name="newsTvDate">01.01.2020</string>
+    <string name="newsArticleRead">Beitrag lesen</string>
+    <string name="mapLoading">Lade Karte…</string>
+    <string name="locationNoGps">GPS nicht aktiviert</string>
 </resources>

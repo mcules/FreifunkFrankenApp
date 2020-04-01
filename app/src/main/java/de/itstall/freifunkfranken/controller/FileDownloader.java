@@ -101,6 +101,6 @@ public class FileDownloader extends AsyncTask<String, Void, String> {
         super.onPostExecute(string);
         if (progressDialog != null) progressDialog.dismiss();
         mainActivity.downloadDone = true;
-        mainActivity.loadFragment(mainActivity.fragment);
+        mainActivity.loadFragment(mainActivity.getFragment(mainActivity.selectedTab));
     }
 }

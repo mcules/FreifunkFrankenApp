@@ -36,7 +36,12 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     public void onBindViewHolder(NewsAdapter.ViewHolder viewHolder, int position) {
         viewHolder.tvNewsDate.setText(newsList.get(position).getDate());
         viewHolder.tvNewsTitle.setText(newsList.get(position).getTitle());
-        viewHolder.tvNewsDescription.setText(Html.fromHtml(newsList.get(position).getDescription()));
+        viewHolder.tvNewsDescription.setText(Html.fromHtml(
+                newsList.get(position).getDescription() +
+                        "<br><br><a href=\"" + newsList.get(position).getLink() + "\">" +
+                        viewHolder.itemView.getContext().getString(R.string.newsArticleRead) +
+                        "</a>"
+        ));
         viewHolder.tvNewsDescription.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
@@ -52,9 +57,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
         ViewHolder(View viewNewsItem) {
             super(viewNewsItem);
-            tvNewsDate = viewNewsItem.findViewById(R.id.tvNewsDate);
-            tvNewsTitle = viewNewsItem.findViewById(R.id.tvNewsTitle);
-            tvNewsDescription = viewNewsItem.findViewById(R.id.tvNewsDescription);
+            tvNewsDate = viewNewsItem.findViewById(R.id.newsTvDate);
+            tvNewsTitle = viewNewsItem.findViewById(R.id.newsTvTitle);
+            tvNewsDescription = viewNewsItem.findViewById(R.id.newsTvDescription);
         }
     }
 }

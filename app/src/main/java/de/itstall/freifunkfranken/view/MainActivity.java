@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     public Fragment fragment = null;
     public boolean downloadDone = false;
     TabLayout tabLayout;
+    public int selectedTab;
     private SharedPreferences sharedPreferences;
 
     @Override
@@ -31,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        sharedPreferences = this.getApplicationContext().getSharedPreferences("FreifunkFrankenApp", 0);
+        sharedPreferences = this.getApplicationContext().getSharedPreferences(getResources().getString(R.string.app_name), 0);
 
         tabLayout = findViewById(R.id.tabLayout);
 
@@ -51,22 +52,10 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                switch (tab.getPosition()) {
-                    case 0:
-                        fragment = new NewsFragment();
-                        break;
-                    case 1:
-                        fragment = new NextApFragment();
-                        break;
-                    case 2:
-                        fragment = new MapsFragment();
-                        break;
-                    case 3:
-                        fragment = new SsidsFragment();
-                }
-                if (downloadDone) loadFragment(fragment);
+                selectedTab = tab.getPosition();
+                if (downloadDone) loadFragment(getFragment(selectedTab));
                 @SuppressLint("CommitPrefEdits") Editor editor = sharedPreferences.edit();
-                editor.putInt("selectedTab", tab.getPosition());
+                editor.putInt("selectedTab", selectedTab);
                 editor.apply();
             }
 
@@ -78,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
-
         downloadFiles();
     }
 
@@ -102,6 +90,24 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public Fragment getFragment(int selectedTab) {
+        switch (selectedTab) {
+            case 0:
+                fragment = new NewsFragment();
+                break;
+            case 1:
+                fragment = new NextApFragment();
+                break;
+            case 2:
+                fragment = new MapsFragment();
+                break;
+            case 3:
+                fragment = new SsidsFragment();
+        }
+
+        return fragment;
+    }
+
     public void downloadFiles() {
         FileDownloader fileDownloader = new FileDownloader(this, "https://fff-app.itstall.de/data.json", "data.json");
         fileDownloader.execute();
@@ -110,7 +116,6 @@ public class MainActivity extends AppCompatActivity {
     public void loadFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        assert fragment != null;
         fragmentTransaction.replace(R.id.frameLayout, fragment);
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         fragmentTransaction.commit();
@@ -119,13 +124,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        TabLayout.Tab selectedTab = tabLayout.getTabAt(sharedPreferences.getInt("selectedTab", 0));
-        assert selectedTab != null;
-        selectedTab.select();
-    }
+        int savedTab = sharedPreferences.getInt("selectedTab", 0);
 
-    @Override
-    protected void onPause() {
-        super.onPause();
+        // reload Tab
+        if (savedTab == 0) tabLayout.getTabAt(1).select();
+        else tabLayout.getTabAt(0).select();
+
+        tabLayout.getTabAt(savedTab).select();
     }
 }

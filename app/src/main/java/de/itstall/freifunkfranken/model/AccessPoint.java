@@ -51,7 +51,7 @@ public class AccessPoint {
         return apLocation;
     }
 
-    public void setDistance(int distance) {
-        this.distance = distance;
+    public void setDistance(Location location) {
+        this.distance = (int) this.getLocation().distanceTo(location);
     }
 }

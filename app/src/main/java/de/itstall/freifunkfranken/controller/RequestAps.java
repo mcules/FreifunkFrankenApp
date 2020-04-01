@@ -17,14 +17,18 @@ import java.util.List;
 import java.util.Objects;
 
 import de.itstall.freifunkfranken.model.AccessPoint;
+import de.itstall.freifunkfranken.view.NextApFragment;
 
 public class RequestAps {
     private List<AccessPoint> accessPointList = new ArrayList<>();
+    private static final String TAG = RequestAps.class.getSimpleName();
+    private Context context;
 
     public RequestAps(Context context) {
         String filename = "data.json";
         StringBuilder stringBuilder = new StringBuilder();
         File dataFile = new File(context.getFilesDir(), filename);
+        this.context = context;
 
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(dataFile));
@@ -59,31 +63,40 @@ public class RequestAps {
     }
 
     public List<AccessPoint> getSortedList(boolean showOffline, int routerCount) {
-        List<AccessPoint> newList = new ArrayList<>();
+        List<AccessPoint> routerList = new ArrayList<>();
         int counter = 0;
 
-        for (AccessPoint ap : accessPointList) {
+        for (int i = 0; i < accessPointList.size(); i++) {
             if(showOffline) {
-                //float distance = NextApFragment.myLocationListener.myLocation.distanceTo(ap.getLocation()) / 1000;
-                //ap.setDistance((int) distance / 1000);
-                newList.add(ap);
+                if (NextApFragment.location != null)
+                    accessPointList.get(i).setDistance(NextApFragment.location);
+                routerList.add(accessPointList.get(i));
                 counter++;
             } else {
-                if(ap.isOnline()) {
-                    newList.add(ap);
+                if (accessPointList.get(i).isOnline()) {
+                    if (NextApFragment.location != null)
+                        accessPointList.get(i).setDistance(NextApFragment.location);
+                    routerList.add(accessPointList.get(i));
                     counter++;
                 }
             }
-            if(routerCount > 0 && counter == routerCount) break;
         }
 
-        Collections.sort(newList, new Comparator<AccessPoint>() {
+        Collections.sort(routerList, new Comparator<AccessPoint>() {
             @Override
             public int compare(AccessPoint o1, AccessPoint o2) {
                 return Integer.compare(o1.getDistance(), o2.getDistance());
             }
         });
 
-        return newList;
+        if (routerCount > 0) {
+            List<AccessPoint> resultList = new ArrayList<>();
+            for (int i = 0; i < routerCount; i++) {
+                resultList.add(routerList.get(i));
+            }
+            return resultList;
+        } else {
+            return routerList;
+        }
     }
 }

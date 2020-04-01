@@ -23,7 +23,7 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        sharedPreferences = getApplicationContext().getSharedPreferences("FreifunkFrankenApp", 0);
+        sharedPreferences = getApplicationContext().getSharedPreferences(getResources().getString(R.string.app_name), 0);
         settingsSwOfflineRouter = findViewById(R.id.settingsSwOfflineRouter);
         settingsSwMapOfflineRouter = findViewById(R.id.settingsSwMapOfflineRouter);
         settingsTxtRouterCount = findViewById(R.id.settingsTxtRouterCount);

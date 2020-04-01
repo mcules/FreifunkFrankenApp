@@ -47,7 +47,8 @@ public class RequestNews {
                 news = new News(
                         item.getString("title"),
                         item.getString("pubDate"),
-                        item.getString("description")
+                        item.getString("description"),
+                        item.getString("link")
                 );
                 newsList.add(news);
             }

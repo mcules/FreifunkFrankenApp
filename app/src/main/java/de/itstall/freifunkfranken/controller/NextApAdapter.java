@@ -30,15 +30,16 @@ public class NextApAdapter extends RecyclerView.Adapter<NextApAdapter.ViewHolder
         return new ViewHolder(viewApsItem);
     }
 
+    @SuppressLint("DefaultLocale")
     @Override
     public void onBindViewHolder(NextApAdapter.ViewHolder viewHolder, int position) {
         viewHolder.tvAp.setText(accessPointList.get(position).getName());
-        if (accessPointList.get(position).isOnline()) {
-            viewHolder.tvStatus.setText(R.string.statusOnline);
-        } else {
-            viewHolder.tvStatus.setText(R.string.statusOffline);
-        }
-        //viewHolder.tvDistance.setText(String.format("%dm", accessPointList.get(position).getDistance(NextApFragment.myLocationListener.latitude, NextApFragment.myLocationListener.longitude)));
+        viewHolder.tvStatus.setText(
+                accessPointList.get(position).isOnline() ? R.string.statusOnline : R.string.statusOffline
+        );
+        viewHolder.tvDistance.setText(
+                String.format("%d m", accessPointList.get(position).getDistance())
+        );
     }
 
     @Override
@@ -53,9 +54,9 @@ public class NextApAdapter extends RecyclerView.Adapter<NextApAdapter.ViewHolder
 
         ViewHolder(View itemView) {
             super(itemView);
-            tvAp = itemView.findViewById(R.id.tvNewsTitle);
-            tvStatus = itemView.findViewById(R.id.tvStatus);
-            tvDistance = itemView.findViewById(R.id.tvNewsDate);
+            tvAp = itemView.findViewById(R.id.nextApSsid);
+            tvStatus = itemView.findViewById(R.id.nextApTvStatus);
+            tvDistance = itemView.findViewById(R.id.nextApDistance);
         }
     }
 }
