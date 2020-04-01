@@ -17,8 +17,8 @@ import java.util.Objects;
 
 import de.itstall.freifunkfranken.R;
 import de.itstall.freifunkfranken.controller.NextApAdapter;
-import de.itstall.freifunkfranken.model.AccessPoint;
 import de.itstall.freifunkfranken.controller.RequestAps;
+import de.itstall.freifunkfranken.model.AccessPoint;
 
 public class NextApFragment extends Fragment {
     private RecyclerView rvAps;
@@ -36,7 +36,6 @@ public class NextApFragment extends Fragment {
         rootView = inflater.inflate(R.layout.nextap_fragment, container, false);
 
         sharedPreferences = rootView.getContext().getSharedPreferences("FreifunkFrankenApp", 0);
-
 
         rvAps = rootView.findViewById(R.id.rvAps);
         rvAps.setLayoutManager(new LinearLayoutManager(getActivity()));

@@ -29,7 +29,6 @@ public class SsidsFragment extends androidx.fragment.app.Fragment {
     public static List<Ssid> ssidList;
     private RecyclerView rvSsids;
     private View rootView;
-    private SsidsFragmentListener ssidsFragmentListener;
     public static final int REQUEST_ID_ACCESS_WIFI_STATE = 102;
     public static final int REQUEST_ID_CHANGE_WIFI_STATE = 103;
     public static final int REQUEST_ID_WRITE_SETTINGS = 104;
@@ -45,7 +44,7 @@ public class SsidsFragment extends androidx.fragment.app.Fragment {
         rvSsids = rootView.findViewById(R.id.rvSsids);
         rvSsids.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        ssidsFragmentListener = new SsidsFragmentListener(this);
+        SsidsFragmentListener ssidsFragmentListener = new SsidsFragmentListener(this);
 
         Button ssidsFragmentBtnAddAll = rootView.findViewById(R.id.ssidsFragmentBtnAddAll);
         ssidsFragmentBtnAddAll.setOnClickListener(ssidsFragmentListener);

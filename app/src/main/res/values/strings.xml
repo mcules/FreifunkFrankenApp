@@ -3,6 +3,7 @@
     <string name="tabNextAp">Nächster AP</string>
     <string name="tabSsids">SSIDs</string>
     <string name="tabKarte">Karte</string>
+    <string name="tabNews">News</string>
     <string name="btnSsidAdd">Hinzufügen</string>
     <string name="tvStatusName">Status:</string>
     <string name="statusOnline">Online</string>
@@ -33,4 +34,7 @@
     </string>
     <string name="aboutTvTitle">Über die Freifunk Franken App</string>
     <string name="popupWritePermissionFragmentTitle">Zugriff benötigt</string>
+    <string name="newsTvDescription">Meine lange Beschreibung</string>
+    <string name="newsTvTitle">Mein Titel</string>
+    <string name="newsTvDate">01.01.2020</string>
 </resources>

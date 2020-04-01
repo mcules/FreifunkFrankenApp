@@ -39,8 +39,8 @@ public class RequestAps {
         }
 
         try {
-            JSONObject jsonString = new JSONObject(stringBuilder.toString());
-            JSONArray nodes = jsonString.getJSONArray("nodes");
+            JSONObject jsonObject = new JSONObject(stringBuilder.toString());
+            JSONArray nodes = jsonObject.getJSONArray("nodes");
             JSONObject node;
             AccessPoint ap;
             for (int i = 0; i < nodes.length(); i++) {

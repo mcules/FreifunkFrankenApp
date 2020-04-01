@@ -15,6 +15,7 @@ import de.itstall.freifunkfranken.R;
 import de.itstall.freifunkfranken.model.AccessPoint;
 
 public class NextApAdapter extends RecyclerView.Adapter<NextApAdapter.ViewHolder> {
+    private static final String TAG = NextApAdapter.class.getSimpleName();
     private List<AccessPoint> accessPointList;
 
     public NextApAdapter(List<AccessPoint> aps) {
@@ -52,9 +53,9 @@ public class NextApAdapter extends RecyclerView.Adapter<NextApAdapter.ViewHolder
 
         ViewHolder(View itemView) {
             super(itemView);
-            tvAp = itemView.findViewById(R.id.tvAp);
+            tvAp = itemView.findViewById(R.id.tvNewsTitle);
             tvStatus = itemView.findViewById(R.id.tvStatus);
-            tvDistance = itemView.findViewById(R.id.tvDistance);
+            tvDistance = itemView.findViewById(R.id.tvNewsDate);
         }
     }
 }

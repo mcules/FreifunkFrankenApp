@@ -3,9 +3,7 @@ package de.itstall.freifunkfranken.view;
 import android.Manifest;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,9 +27,8 @@ import java.util.Objects;
 import de.itstall.freifunkfranken.R;
 import de.itstall.freifunkfranken.controller.RequestAps;
 import de.itstall.freifunkfranken.model.AccessPoint;
-import de.itstall.freifunkfranken.model.MyLocationProvider;
 
-public class MapsFragment extends Fragment implements OnMapReadyCallback, MyLocationProvider.LocationCallback {
+public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private static final String TAG = MapsFragment.class.getSimpleName();
     private GoogleMap mMap;
     private View rootView;
@@ -53,9 +50,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MyLoca
         if (mapFragment != null) mapFragment.getMapAsync(this);
 
         sharedPreferences = rootView.getContext().getSharedPreferences("FreifunkFrankenApp", 0);
-
-        //mLocationProvider = new MyLocationProvider(this.getContext(), this);
-        //mLocationProvider.connect();
 
         checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, REQUEST_ID_ACCESS_COARSE_LOCATION);
         checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION, REQUEST_ID_ACCESS_COARSE_LOCATION);
@@ -89,16 +83,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MyLoca
             else markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
             mMap.addMarker(markerOptions);
         }
-    }
-
-    @Override
-    public void handleNewLocation(Location location) {
-        Log.d(TAG, location.toString());
-
-        double currentLatitude = location.getLatitude();
-        double currentLongitude = location.getLongitude();
-        LatLng latLng = new LatLng(currentLatitude, currentLongitude);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
     }
 
     public void checkPermission(String permission, int requestCode) {

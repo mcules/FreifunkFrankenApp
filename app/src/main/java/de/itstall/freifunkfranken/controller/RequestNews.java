@@ -14,12 +14,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import de.itstall.freifunkfranken.model.Ssid;
+import de.itstall.freifunkfranken.model.News;
 
-public class RequestSsids {
-    private List<Ssid> ssidList = new ArrayList<>();
+public class RequestNews {
+    private static final String TAG = RequestNews.class.getSimpleName();
+    private List<News> newsList = new ArrayList<>();
 
-    public RequestSsids(Context context) {
+    public RequestNews(Context context) {
         String filename = "data.json";
         StringBuilder stringBuilder = new StringBuilder();
         File dataFile = new File(context.getFilesDir(), filename);
@@ -38,16 +39,24 @@ public class RequestSsids {
 
         try {
             JSONObject jsonObject = new JSONObject(stringBuilder.toString());
-            JSONArray jsonArray = jsonObject.getJSONArray("ssids");
-            for (int i = 0; i < jsonArray.length(); i++) {
-                ssidList.add(new Ssid(jsonArray.getString(i)));
+            JSONArray newsArray = jsonObject.getJSONArray("news");
+            JSONObject item;
+            News news;
+            for (int i = 0; i < newsArray.length(); i++) {
+                item = newsArray.getJSONObject(i);
+                news = new News(
+                        item.getString("title"),
+                        item.getString("pubDate"),
+                        item.getString("description")
+                );
+                newsList.add(news);
             }
         } catch (JSONException e) {
             Log.e("JSONException:", Objects.requireNonNull(e.getMessage()));
         }
     }
 
-    public List<Ssid> getSsidList() {
-        return ssidList;
+    public List<News> getNewsList() {
+        return newsList;
     }
 }

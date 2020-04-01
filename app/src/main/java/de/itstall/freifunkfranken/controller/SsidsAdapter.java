@@ -46,7 +46,7 @@ public class SsidsAdapter extends RecyclerView.Adapter<SsidsAdapter.ViewHolder> 
 
         ViewHolder(View itemView) {
             super(itemView);
-            tvSsid = itemView.findViewById(R.id.tvAp);
+            tvSsid = itemView.findViewById(R.id.tvNewsTitle);
         }
     }
 }
