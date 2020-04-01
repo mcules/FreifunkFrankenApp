@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
@@ -37,7 +36,6 @@ import de.itstall.freifunkfranken.model.AccessPoint;
 public class NextApFragment extends Fragment {
     private RecyclerView rvAps;
     private View rootView;
-    private TextView tvTemp;
     private SharedPreferences sharedPreferences;
     public static Location location;
     private LocationManager locationManager;
@@ -55,7 +53,6 @@ public class NextApFragment extends Fragment {
 
         rvAps = rootView.findViewById(R.id.rvAps);
         rvAps.setLayoutManager(new LinearLayoutManager(getActivity()));
-        tvTemp = rootView.findViewById(R.id.tvTemp);
 
         locationManager = (LocationManager) rootView.getContext().getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
         Dexter.withActivity((Activity) rootView.getContext()).withPermission(Manifest.permission.ACCESS_FINE_LOCATION).withListener(new PermissionListener() {
@@ -87,6 +84,5 @@ public class NextApFragment extends Fragment {
         NextApAdapter nextApAdapter = new NextApAdapter(accessPointList);
         rvAps.setAdapter(nextApAdapter);
         rvAps.setItemAnimator(new DefaultItemAnimator());
-        tvTemp.setText(String.valueOf(accessPointList.size()));
     }
 }

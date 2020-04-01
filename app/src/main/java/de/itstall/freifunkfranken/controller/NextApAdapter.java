@@ -56,9 +56,9 @@ public class NextApAdapter extends RecyclerView.Adapter<NextApAdapter.ViewHolder
 
         ViewHolder(View itemView) {
             super(itemView);
-            tvAp = itemView.findViewById(R.id.nextApSsid);
+            tvAp = itemView.findViewById(R.id.nextApTvSsid);
             tvStatus = itemView.findViewById(R.id.nextApTvStatus);
-            tvDistance = itemView.findViewById(R.id.nextApDistance);
+            tvDistance = itemView.findViewById(R.id.nextApTvDistance);
         }
     }
 }
