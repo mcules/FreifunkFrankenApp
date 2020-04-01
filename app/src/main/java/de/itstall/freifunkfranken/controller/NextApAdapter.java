@@ -1,6 +1,7 @@
 package de.itstall.freifunkfranken.controller;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +41,7 @@ public class NextApAdapter extends RecyclerView.Adapter<NextApAdapter.ViewHolder
         viewHolder.tvDistance.setText(
                 String.format("%d m", accessPointList.get(position).getDistance())
         );
+        viewHolder.tvStatus.setTextColor((accessPointList.get(position).isOnline()) ? Color.GREEN : Color.RED);
     }
 
     @Override
