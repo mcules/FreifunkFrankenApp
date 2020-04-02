@@ -53,6 +53,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private ProgressDialog progressDialog = null;
     private LocationManager locationManager;
     private CustomLocationListener customLocationListener;
+    String locationProvider;
+
     private CustomLocationListenerInterface locationListener = new CustomLocationListenerInterface() {
         @Override
         public void onLocationChanged(Location location) {
@@ -104,8 +106,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                 .getApplicationContext()
                 .getSystemService(Context.LOCATION_SERVICE);
 
-        String locationProvider = getEnabledLocationProvider();
-
         Dexter.withActivity((Activity) rootView.getContext())
                 .withPermissions(
                         Manifest.permission.ACCESS_FINE_LOCATION,
@@ -131,6 +131,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                                                                   .ACCESS_COARSE_LOCATION
                                                   ) == PackageManager.PERMISSION_GRANTED
                                           ) {
+                                              locationProvider = getEnabledLocationProvider();
+                                              
+                                              assert locationProvider != null;
                                               locationManager
                                                       .requestLocationUpdates(
                                                               locationProvider,

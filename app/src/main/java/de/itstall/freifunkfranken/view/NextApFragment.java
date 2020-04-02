@@ -43,6 +43,7 @@ public class NextApFragment extends Fragment implements NextApAdapter.OnItemClic
     private SharedPreferences sharedPreferences;
     private LocationManager locationManager;
     private List<AccessPoint> accessPointList;
+    private String locationProvider;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,8 +67,6 @@ public class NextApFragment extends Fragment implements NextApAdapter.OnItemClic
         locationManager = (LocationManager) rootView.getContext()
                 .getApplicationContext()
                 .getSystemService(Context.LOCATION_SERVICE);
-
-        String locationProvider = getEnabledLocationProvider();
 
         Dexter.withActivity((Activity) rootView.getContext())
                 .withPermissions(
@@ -94,6 +93,9 @@ public class NextApFragment extends Fragment implements NextApAdapter.OnItemClic
                                                                   .ACCESS_COARSE_LOCATION
                                                   ) == PackageManager.PERMISSION_GRANTED
                                           ) {
+                                              locationProvider = getEnabledLocationProvider();
+
+                                              assert locationProvider != null;
                                               location = locationManager
                                                       .getLastKnownLocation(locationProvider);
                                           }
