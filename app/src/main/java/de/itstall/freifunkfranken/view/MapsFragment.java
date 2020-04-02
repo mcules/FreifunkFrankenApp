@@ -138,7 +138,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(latLng)
-                .zoom(sharedPreferences.getInt("mapZoom", 10))
+                .zoom(sharedPreferences.getInt("mapZoom", 7))
                 .build();
 
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
