@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         createTab(getResources().getString(R.string.tabNews));
         createTab(getResources().getString(R.string.tabNextAp));
         createTab(getResources().getString(R.string.tabKarte));
-        //createTab(getResources().getString(R.string.tabSsids));
+        createTab(getResources().getString(R.string.tabSsids));
 
         tabLayout.addOnTabSelectedListener(mainActivityListener.onTabSelectedListener());
 

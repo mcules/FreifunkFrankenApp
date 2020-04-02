@@ -61,6 +61,21 @@ public class NextApFragment extends Fragment implements NextApAdapter.OnItemClic
 
         locationManager = (LocationManager) rootView.getContext().getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
 
+        checkPermissions();
+
+        accessPointList = new RequestAps(
+                Objects.requireNonNull(this.getContext())).
+                getSortedList(
+                        sharedPreferences.getBoolean("OfflineRouter", false),
+                        sharedPreferences.getInt("RouterCount", 10)
+                );
+
+        showApList(accessPointList);
+
+        return rootView;
+    }
+
+    private void checkPermissions() {
         Dexter.withActivity((Activity) rootView.getContext())
                 .withPermissions(
                         Manifest.permission.ACCESS_FINE_LOCATION,
@@ -86,17 +101,6 @@ public class NextApFragment extends Fragment implements NextApAdapter.OnItemClic
                               }
                 )
                 .check();
-
-        accessPointList = new RequestAps(
-                Objects.requireNonNull(this.getContext())).
-                getSortedList(
-                        sharedPreferences.getBoolean("OfflineRouter", false),
-                        sharedPreferences.getInt("RouterCount", 10)
-                );
-
-        showApList(accessPointList);
-
-        return rootView;
     }
 
     private void showApList(List<AccessPoint> accessPointList) {

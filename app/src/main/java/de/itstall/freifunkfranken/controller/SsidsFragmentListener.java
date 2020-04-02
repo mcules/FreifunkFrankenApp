@@ -1,26 +1,23 @@
 package de.itstall.freifunkfranken.controller;
 
-import android.Manifest;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.ConnectivityManager;
-import android.net.NetworkRequest;
-import android.net.Uri;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
-import android.net.wifi.WifiNetworkSpecifier;
 import android.net.wifi.WifiNetworkSuggestion;
 import android.os.Build;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import de.itstall.freifunkfranken.R;
 import de.itstall.freifunkfranken.view.SsidsFragment;
 
 import static android.content.Context.WIFI_SERVICE;
@@ -28,76 +25,22 @@ import static android.content.Context.WIFI_SERVICE;
 public class SsidsFragmentListener implements View.OnClickListener {
     private static final String TAG = SsidsFragmentListener.class.getSimpleName();
     private View view;
-    private final SsidsFragment ssidsFragment;
-
-    public SsidsFragmentListener(SsidsFragment ssidsFragment) {
-        this.ssidsFragment = ssidsFragment;
-    }
+    private WifiManager wifiManager;
 
     @Override
     public void onClick(View view) {
         this.view = view;
-        ssidsFragment.checkPermission(Manifest.permission.ACCESS_WIFI_STATE, SsidsFragment.REQUEST_ID_ACCESS_WIFI_STATE);
-        ssidsFragment.checkPermission(Manifest.permission.CHANGE_WIFI_STATE, SsidsFragment.REQUEST_ID_CHANGE_WIFI_STATE);
-        ssidsFragment.checkPermission(Manifest.permission.WRITE_SETTINGS, SsidsFragment.REQUEST_ID_WRITE_SETTINGS);
-        try {
-            if(checkSystemWritePermission()) {
-                Log.d(TAG, "Allow modify system settings is on");
-                addSsidsToMobile();
-            } else {
-                Log.d(TAG, "Allow modify system settings is off");
-                Toast.makeText(view.getContext(), "Allow modify system settings => ON", Toast.LENGTH_SHORT).show();
-            }
-        } catch (Exception e) {
-            Log.i(TAG, e.toString());
-            Toast.makeText(view.getContext(), "unable to set SSIDs", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private boolean checkSystemWritePermission() {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if(Settings.System.canWrite(view.getContext())) {
-                return true;
-            } else {
-                openAndroidPermissionsMenu();
-            }
-        }
-        return false;
-    }
-
-    private void openAndroidPermissionsMenu() {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
-            intent.setData(Uri.parse("package:" + view.getContext().getPackageName()));
-            view.getContext().startActivity(intent);
-        }
+        addSsidsToMobile();
     }
 
     private void addSsidsToMobile() {
         WifiConfiguration wifiConfig;
-        WifiManager wifiManager;
-        WifiNetworkSpecifier wifiNetworkSpecifier;
-        NetworkRequest networkRequest;
-        ConnectivityManager connectivityManager;
-        WifiNetworkSuggestion wifiNetworkSuggestion;
         final List<WifiNetworkSuggestion> suggestionList = new ArrayList<>();
-        int netId;
 
-        for(int i = 0; i < SsidsFragment.ssidList.size(); i++) {
+        for (int i = 0; i < SsidsFragment.ssidList.size(); i++) {
             if (Build.VERSION.SDK_INT >= 29) {
-                /*wifiNetworkSpecifier = new WifiNetworkSpecifier.Builder()
+                WifiNetworkSuggestion wifiNetworkSuggestion = new WifiNetworkSuggestion.Builder()
                         .setSsid(SsidsFragment.ssidList.get(i).getSsid())
-                        .build();
-                networkRequest = new NetworkRequest.Builder()
-                        .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-                        .setNetworkSpecifier(wifiNetworkSpecifier)
-                        .build();
-                connectivityManager = (ConnectivityManager) view.getContext().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-                assert connectivityManager != null;
-                connectivityManager.requestNetwork(networkRequest, new ConnectivityManager.NetworkCallback());*/
-                wifiNetworkSuggestion = new WifiNetworkSuggestion.Builder()
-                        .setSsid(SsidsFragment.ssidList.get(i).getSsid())
-                        .setIsAppInteractionRequired(false)
                         .build();
 
                 suggestionList.add(wifiNetworkSuggestion);
@@ -108,21 +51,27 @@ public class SsidsFragmentListener implements View.OnClickListener {
                 wifiConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
 
                 wifiManager = (WifiManager) view.getContext().getApplicationContext().getSystemService(WIFI_SERVICE);
-                //remember id
+
                 assert wifiManager != null;
-                // Turn wifi connection on
                 wifiManager.setWifiEnabled(true);
-                netId = wifiManager.addNetwork(wifiConfig);
-                Log.e(TAG, "adding ssid:" + SsidsFragment.ssidList.get(i).getSsid() + " returned netId: " + netId);
+                wifiManager.addNetwork(wifiConfig);
             }
         }
-        if(Build.VERSION.SDK_INT >= 29) {
-            Log.d(TAG, "Array size: " + suggestionList.size());
+        if (Build.VERSION.SDK_INT >= 29) {
+            deleteSuggestions();
             wifiManager = (WifiManager) view.getContext().getApplicationContext().getSystemService(WIFI_SERVICE);
+
             assert wifiManager != null;
-            final int status = wifiManager.addNetworkSuggestions(suggestionList);
-            if(status != WifiManager.STATUS_NETWORK_SUGGESTIONS_SUCCESS) {
-                Log.e(TAG, "Add wifi suggestion list failed " + status);
+            if (wifiManager.addNetworkSuggestions(suggestionList) != WifiManager.STATUS_NETWORK_SUGGESTIONS_SUCCESS) {
+                Log.e(TAG, "Add wifi suggestion list failed");
+            } else {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(view.getContext());
+                alertDialogBuilder
+                        .setTitle(view.getContext().getResources().getString(R.string.ssidSuggestionsAddedTitle))
+                        .setMessage(view.getContext().getResources().getString(R.string.ssidSuggestionsAddedDescription))
+                        .setPositiveButton(view.getContext().getResources().getString(R.string.okay), (dialog, which) -> dialog.dismiss());
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
             }
 
             final IntentFilter intentFilter = new IntentFilter(WifiManager.ACTION_WIFI_NETWORK_SUGGESTION_POST_CONNECTION);
@@ -134,8 +83,15 @@ public class SsidsFragmentListener implements View.OnClickListener {
             };
             view.getContext().registerReceiver(broadcastReceiver, intentFilter);
         }
-        /*wifiManager.disconnect();
-        wifiManager.enableNetwork(netId, true);
-        wifiManager.reconnect();*/
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    private void deleteSuggestions() {
+        final List<WifiNetworkSuggestion> suggestionList = new ArrayList<>();
+
+        wifiManager = (WifiManager) view.getContext().getApplicationContext().getSystemService(WIFI_SERVICE);
+
+        assert wifiManager != null;
+        wifiManager.removeNetworkSuggestions(suggestionList);
     }
 }
