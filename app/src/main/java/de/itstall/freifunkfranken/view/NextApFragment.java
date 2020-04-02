@@ -132,19 +132,13 @@ public class NextApFragment extends Fragment implements NextApAdapter.OnItemClic
 
     @Override
     public void onItemClick(int position) {
-        // TODO: Start navigation
-
-        // Create a Uri from an intent string. Use the result to create an Intent.
         Uri gmmIntentUri = Uri.parse("google.navigation:q=" +
                 accessPointList.get(position).getLat() + "," +
                 accessPointList.get(position).getLon());
 
-        // Create an Intent from gmmIntentUri. Set the action to ACTION_VIEW
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-        // Make the Intent explicit by setting the Google Maps package
         mapIntent.setPackage("com.google.android.apps.maps");
 
-        // Attempt to start an activity that can handle the Intent
         if (mapIntent.resolveActivity(getContext().getPackageManager()) != null) {
             startActivity(mapIntent);
         }
