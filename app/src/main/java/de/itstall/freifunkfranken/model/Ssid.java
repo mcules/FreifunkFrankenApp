@@ -1,8 +1,8 @@
 package de.itstall.freifunkfranken.model;
 
 public class Ssid {
-    private String ssid;
-    private String key;
+    private final String ssid;
+    private final String key;
 
     public Ssid(String ssid) {
         this.ssid = ssid;

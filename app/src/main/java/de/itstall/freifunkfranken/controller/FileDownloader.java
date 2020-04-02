@@ -24,7 +24,7 @@ public class FileDownloader extends AsyncTask<String, Void, String> {
     private final String downloadUrl;
     private ProgressDialog progressDialog = null;
     @SuppressLint("StaticFieldLeak")
-    private MainActivity mainActivity;
+    private final MainActivity mainActivity;
 
     public FileDownloader(MainActivity mainActivity, String downloadUrl, String filename) {
         this.mainActivity = mainActivity;
@@ -39,7 +39,7 @@ public class FileDownloader extends AsyncTask<String, Void, String> {
         URL url;
         File saveFile;
         BufferedWriter writer;
-        BufferedReader reader = null;
+        BufferedReader reader;
         String line;
         InputStream inputStream;
 
@@ -53,7 +53,6 @@ public class FileDownloader extends AsyncTask<String, Void, String> {
             try {
                 reader = new BufferedReader(new InputStreamReader(inputStream));
                 stringBuilder = new StringBuilder();
-                line = "";
                 while ((line = reader.readLine()) != null) {
                     stringBuilder.append(line);
                 }

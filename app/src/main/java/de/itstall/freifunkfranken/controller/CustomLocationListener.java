@@ -5,7 +5,7 @@ import android.location.LocationListener;
 import android.os.Bundle;
 
 public class CustomLocationListener implements LocationListener {
-    private LocationListenerInterface listenerInterface;
+    private final LocationListenerInterface listenerInterface;
 
     public CustomLocationListener(LocationListenerInterface locationListenerInterface) {
         this.listenerInterface = locationListenerInterface;

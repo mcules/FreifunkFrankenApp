@@ -18,7 +18,7 @@ import de.itstall.freifunkfranken.model.News;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     private static final String TAG = NewsAdapter.class.getSimpleName();
-    private List<News> newsList;
+    private final List<News> newsList;
 
     public NewsAdapter(List<News> newsList) {
         this.newsList = newsList;
@@ -51,9 +51,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvNewsTitle;
-        TextView tvNewsDate;
-        TextView tvNewsDescription;
+        final TextView tvNewsTitle;
+        final TextView tvNewsDate;
+        final TextView tvNewsDescription;
 
         ViewHolder(View viewNewsItem) {
             super(viewNewsItem);

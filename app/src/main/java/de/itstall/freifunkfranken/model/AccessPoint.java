@@ -3,10 +3,10 @@ package de.itstall.freifunkfranken.model;
 import android.location.Location;
 
 public class AccessPoint {
-    private String name;
-    private boolean online;
-    private double lat;
-    private double lon;
+    private final String name;
+    private final boolean online;
+    private final double lat;
+    private final double lon;
     private int distance;
 
     public AccessPoint(String name, double lat, double lon, boolean online) {
@@ -34,13 +34,6 @@ public class AccessPoint {
 
     public int getDistance() {
         return distance;
-    }
-
-    public int getDistance(double gpsLat, double gpsLon) {
-        float[] distance = new float[1];
-        Location.distanceBetween(gpsLat, gpsLon, this.getLat(), this.getLon(), distance);
-
-        return (int) distance[0];
     }
 
     public Location getLocation() {

@@ -22,7 +22,7 @@ import de.itstall.freifunkfranken.controller.MainActivityListener;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
-    public Fragment fragment = null;
+    private Fragment fragment = null;
     public boolean downloadDone = false;
     public int selectedTab;
     public SharedPreferences sharedPreferences;

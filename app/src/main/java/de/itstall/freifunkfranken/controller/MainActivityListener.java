@@ -6,7 +6,7 @@ import com.google.android.material.tabs.TabLayout;
 import de.itstall.freifunkfranken.view.MainActivity;
 
 public class MainActivityListener {
-    private MainActivity mainActivity;
+    private final MainActivity mainActivity;
 
     public MainActivityListener(MainActivity mainActivity) {
         this.mainActivity = mainActivity;

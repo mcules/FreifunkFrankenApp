@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -20,16 +19,11 @@ public class AboutActivity extends AppCompatActivity {
         setContentView(R.layout.activity_about);
 
         Button aboutBtnClose = findViewById(R.id.AboutBtnClose);
-        TextView aboutTvLizencesApp = findViewById(R.id.aboutTvLizencesApp);
+        TextView aboutTvLicencesApp = findViewById(R.id.aboutTvLizencesApp);
 
-        aboutTvLizencesApp.setText(Html.fromHtml(getResources().getString(R.string.aboutTvAppLizence)));
-        aboutTvLizencesApp.setMovementMethod(LinkMovementMethod.getInstance());
+        aboutTvLicencesApp.setText(Html.fromHtml(getResources().getString(R.string.aboutTvAppLizence)));
+        aboutTvLicencesApp.setMovementMethod(LinkMovementMethod.getInstance());
 
-        aboutBtnClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        aboutBtnClose.setOnClickListener(v -> finish());
     }
 }

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+import java.util.Objects;
 
 import de.itstall.freifunkfranken.R;
 import de.itstall.freifunkfranken.controller.NewsAdapter;
@@ -19,7 +20,6 @@ import de.itstall.freifunkfranken.model.News;
 
 public class NewsFragment extends Fragment {
     private RecyclerView rvNews;
-    private View rootView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -28,12 +28,12 @@ public class NewsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.news_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.news_fragment, container, false);
 
         rvNews = rootView.findViewById(R.id.rvNews);
         rvNews.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        List<News> newsList = new RequestNews(this.getContext()).getNewsList();
+        List<News> newsList = new RequestNews(Objects.requireNonNull(this.getContext())).getNewsList();
         showNewsList(newsList);
 
         return rootView;

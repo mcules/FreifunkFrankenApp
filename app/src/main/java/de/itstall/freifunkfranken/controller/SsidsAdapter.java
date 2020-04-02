@@ -1,7 +1,6 @@
 package de.itstall.freifunkfranken.controller;
 
 import android.annotation.SuppressLint;
-import android.net.wifi.WifiManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +15,7 @@ import de.itstall.freifunkfranken.R;
 import de.itstall.freifunkfranken.model.Ssid;
 
 public class SsidsAdapter extends RecyclerView.Adapter<SsidsAdapter.ViewHolder> {
-    private List<Ssid> ssidList;
-    private WifiManager wifiManager;
+    private final List<Ssid> ssidList;
 
     public SsidsAdapter(List<Ssid> ssids) {
         this.ssidList = ssids;
@@ -42,7 +40,7 @@ public class SsidsAdapter extends RecyclerView.Adapter<SsidsAdapter.ViewHolder> 
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvSsid;
+        final TextView tvSsid;
 
         ViewHolder(View itemView) {
             super(itemView);

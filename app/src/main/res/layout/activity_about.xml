@@ -26,7 +26,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="@string/aboutTvLizences"
-        android:textColor="@color/freifunk_blau"
+        android:textColor="@color/freifunk_blue"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/aboutTvAppName"

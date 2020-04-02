@@ -17,7 +17,7 @@ import de.itstall.freifunkfranken.model.AccessPoint;
 
 public class NextApAdapter extends RecyclerView.Adapter<NextApAdapter.ViewHolder> {
     private static final String TAG = NextApAdapter.class.getSimpleName();
-    private List<AccessPoint> accessPointList;
+    private final List<AccessPoint> accessPointList;
     private OnItemClicked onClick;
 
     public NextApAdapter(List<AccessPoint> aps) {
@@ -39,7 +39,7 @@ public class NextApAdapter extends RecyclerView.Adapter<NextApAdapter.ViewHolder
         viewHolder.tvStatus.setText(accessPointList.get(position).isOnline() ? R.string.statusOnline : R.string.statusOffline);
 
         double distance = accessPointList.get(position).getDistance();
-        String distanceText = "";
+        String distanceText;
 
         if (distance > 999) distanceText = String.format("%3.2f km", distance / 1000);
         else distanceText = String.format("%3.0f m", distance);
@@ -48,12 +48,7 @@ public class NextApAdapter extends RecyclerView.Adapter<NextApAdapter.ViewHolder
 
         viewHolder.tvStatus.setTextColor((accessPointList.get(position).isOnline()) ? Color.GREEN : Color.RED);
 
-        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onClick.onItemClick(position);
-            }
-        });
+        viewHolder.itemView.setOnClickListener(v -> onClick.onItemClick(position));
     }
 
     public void setOnClick(OnItemClicked onClick) {
@@ -70,9 +65,9 @@ public class NextApAdapter extends RecyclerView.Adapter<NextApAdapter.ViewHolder
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvAp;
-        TextView tvStatus;
-        TextView tvDistance;
+        final TextView tvAp;
+        final TextView tvStatus;
+        final TextView tvDistance;
 
         ViewHolder(View itemView) {
             super(itemView);

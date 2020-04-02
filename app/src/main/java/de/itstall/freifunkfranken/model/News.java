@@ -1,10 +1,10 @@
 package de.itstall.freifunkfranken.model;
 
 public class News {
-    private String title;
-    private String date;
-    private String description;
-    private String link;
+    private final String title;
+    private final String date;
+    private final String description;
+    private final String link;
 
     public News(String title, String date, String description, String link) {
         this.title = title;

@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
-import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
 import android.net.Uri;
 import android.net.wifi.WifiConfiguration;
@@ -21,7 +20,6 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import de.itstall.freifunkfranken.view.SsidsFragment;
 
@@ -30,7 +28,7 @@ import static android.content.Context.WIFI_SERVICE;
 public class SsidsFragmentListener implements View.OnClickListener {
     private static final String TAG = SsidsFragmentListener.class.getSimpleName();
     private View view;
-    private SsidsFragment ssidsFragment;
+    private final SsidsFragment ssidsFragment;
 
     public SsidsFragmentListener(SsidsFragment ssidsFragment) {
         this.ssidsFragment = ssidsFragment;
@@ -39,9 +37,9 @@ public class SsidsFragmentListener implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         this.view = view;
-        ssidsFragment.checkPermission(Manifest.permission.ACCESS_WIFI_STATE, ssidsFragment.REQUEST_ID_ACCESS_WIFI_STATE);
-        ssidsFragment.checkPermission(Manifest.permission.CHANGE_WIFI_STATE, ssidsFragment.REQUEST_ID_CHANGE_WIFI_STATE);
-        ssidsFragment.checkPermission(Manifest.permission.WRITE_SETTINGS, ssidsFragment.REQUEST_ID_WRITE_SETTINGS);
+        ssidsFragment.checkPermission(Manifest.permission.ACCESS_WIFI_STATE, SsidsFragment.REQUEST_ID_ACCESS_WIFI_STATE);
+        ssidsFragment.checkPermission(Manifest.permission.CHANGE_WIFI_STATE, SsidsFragment.REQUEST_ID_CHANGE_WIFI_STATE);
+        ssidsFragment.checkPermission(Manifest.permission.WRITE_SETTINGS, SsidsFragment.REQUEST_ID_WRITE_SETTINGS);
         try {
             if(checkSystemWritePermission()) {
                 Log.d(TAG, "Allow modify system settings is on");
@@ -131,7 +129,7 @@ public class SsidsFragmentListener implements View.OnClickListener {
             final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
-                    if(!Objects.equals(intent.getAction(), WifiManager.ACTION_WIFI_NETWORK_SUGGESTION_POST_CONNECTION)) return;
+                    intent.getAction();
                 }
             };
             view.getContext().registerReceiver(broadcastReceiver, intentFilter);

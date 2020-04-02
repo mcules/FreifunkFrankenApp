@@ -15,7 +15,7 @@
         android:layout_marginRight="0dp"
         android:background="@color/freifunk_magenta"
         app:tabBackground="@color/freifunk_magenta"
-        app:tabIndicatorColor="@color/freifunk_gelb"
+        app:tabIndicatorColor="@color/freifunk_yellow"
         app:tabMode="scrollable"
         app:tabSelectedTextColor="#FFFFFFFF"
         app:tabTextColor="#FF000000" />

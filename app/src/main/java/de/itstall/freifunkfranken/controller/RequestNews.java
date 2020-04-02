@@ -18,7 +18,7 @@ import de.itstall.freifunkfranken.model.News;
 
 public class RequestNews {
     private static final String TAG = RequestNews.class.getSimpleName();
-    private List<News> newsList = new ArrayList<>();
+    private final List<News> newsList = new ArrayList<>();
 
     public RequestNews(Context context) {
         String filename = "data.json";

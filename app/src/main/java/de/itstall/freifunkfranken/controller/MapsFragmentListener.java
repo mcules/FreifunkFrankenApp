@@ -9,7 +9,7 @@ import com.google.android.gms.maps.GoogleMap;
 import de.itstall.freifunkfranken.view.MapsFragment;
 
 public class MapsFragmentListener implements GoogleMap.OnCameraIdleListener {
-    private MapsFragment mapsFragment;
+    private final MapsFragment mapsFragment;
 
     public MapsFragmentListener(MapsFragment mapsFragment) {
         this.mapsFragment = mapsFragment;

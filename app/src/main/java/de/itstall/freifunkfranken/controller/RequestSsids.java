@@ -17,7 +17,7 @@ import java.util.Objects;
 import de.itstall.freifunkfranken.model.Ssid;
 
 public class RequestSsids {
-    private List<Ssid> ssidList = new ArrayList<>();
+    private final List<Ssid> ssidList = new ArrayList<>();
 
     public RequestSsids(Context context) {
         String filename = "data.json";
