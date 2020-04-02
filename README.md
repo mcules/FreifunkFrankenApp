@@ -21,3 +21,4 @@ Du hast, zurzeit, folgende Möglichkeiten in der App:
 
 Die App soll noch weiter ausgebaut werden. Falls ihr also Anregungen oder Ideen habt, immer her damit ;)
 Im GitHub Repository könnt ihr hierfür, über die Issues, einen Request erstellen.
+Pullrequests sind ebenfalls willkommen.
