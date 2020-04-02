@@ -26,10 +26,12 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.util.List;
@@ -49,12 +51,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private ProgressDialog progressDialog = null;
     private LocationManager locationManager;
     private CustomLocationListener customLocationListener;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
     private CustomLocationListenerInterface locationListener = new CustomLocationListenerInterface() {
         @Override
         public void onLocationChanged(Location location) {
@@ -74,6 +70,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     };
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.maps_fragment, container, false);
 
@@ -88,24 +89,35 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
         customLocationListener = new CustomLocationListener(locationListener);
         locationManager = (LocationManager) rootView.getContext().getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
-        Dexter.withActivity((Activity) rootView.getContext()).withPermission(Manifest.permission.ACCESS_FINE_LOCATION).withListener(new PermissionListener() {
-            @Override
-            public void onPermissionGranted(PermissionGrantedResponse response) {
-                if (ActivityCompat.checkSelfPermission(rootView.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 25, customLocationListener);
-                }
-            }
+        Dexter.withActivity((Activity) rootView.getContext())
+                .withPermissions(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+                .withListener(new MultiplePermissionsListener() {
+                                  @Override
+                                  public void onPermissionsChecked(MultiplePermissionsReport report) {
+                                      if (report.areAllPermissionsGranted()) {
+                                          if (
+                                                  ActivityCompat.checkSelfPermission(
+                                                          rootView.getContext(),
+                                                          Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                                                          && ActivityCompat.checkSelfPermission(
+                                                          rootView.getContext(),
+                                                          Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                                          ) {
+                                              locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 25, customLocationListener);
+                                          }
+                                      }
+                                  }
 
-            @Override
-            public void onPermissionDenied(PermissionDeniedResponse response) {
-
-            }
-
-            @Override
-            public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
-                token.continuePermissionRequest();
-            }
-        }).check();
+                                  @Override
+                                  public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                                      token.continuePermissionRequest();
+                                  }
+                              }
+                )
+                .check();
 
         return rootView;
     }
@@ -113,11 +125,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private void showApsOnMap() {
         List<AccessPoint> accessPointList = new RequestAps(Objects.requireNonNull(this.getContext())).getSortedList(sharedPreferences.getBoolean("MapOfflineRouter", false), 0);
 
-        for(int i = 0; i < accessPointList.size(); i++) {
+        for (int i = 0; i < accessPointList.size(); i++) {
             LatLng ap = new LatLng(accessPointList.get(i).getLat(), accessPointList.get(i).getLon());
             MarkerOptions markerOptions = new MarkerOptions().position(ap).title(accessPointList.get(i).getName());
-            if(accessPointList.get(i).isOnline()) markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-            else markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+            if (accessPointList.get(i).isOnline())
+                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+            else
+                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
             mMap.addMarker(markerOptions);
         }
     }

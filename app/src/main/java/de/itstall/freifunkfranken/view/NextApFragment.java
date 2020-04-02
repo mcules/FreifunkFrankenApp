@@ -19,11 +19,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionDeniedResponse;
-import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.single.PermissionListener;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import java.util.List;
 import java.util.Objects;
@@ -34,10 +33,10 @@ import de.itstall.freifunkfranken.controller.RequestAps;
 import de.itstall.freifunkfranken.model.AccessPoint;
 
 public class NextApFragment extends Fragment {
+    public static Location location;
     private RecyclerView rvAps;
     private View rootView;
     private SharedPreferences sharedPreferences;
-    public static Location location;
     private LocationManager locationManager;
 
     @Override
@@ -46,35 +45,61 @@ public class NextApFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(
+            LayoutInflater inflater,
+            ViewGroup container,
+            Bundle savedInstanceState
+    ) {
         rootView = inflater.inflate(R.layout.nextap_fragment, container, false);
 
-        sharedPreferences = rootView.getContext().getSharedPreferences(getResources().getString(R.string.app_name), 0);
+        sharedPreferences = rootView.getContext()
+                .getSharedPreferences(getResources().getString(R.string.app_name), 0);
 
         rvAps = rootView.findViewById(R.id.rvAps);
         rvAps.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        locationManager = (LocationManager) rootView.getContext().getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
-        Dexter.withActivity((Activity) rootView.getContext()).withPermission(Manifest.permission.ACCESS_FINE_LOCATION).withListener(new PermissionListener() {
-            @Override
-            public void onPermissionGranted(PermissionGrantedResponse response) {
-                if (ActivityCompat.checkSelfPermission(rootView.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                }
-            }
+        locationManager = (LocationManager) rootView.getContext()
+                .getApplicationContext()
+                .getSystemService(Context.LOCATION_SERVICE);
+        Dexter.withActivity((Activity) rootView.getContext())
+                .withPermissions(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+                .withListener(new MultiplePermissionsListener() {
+                                  @Override
+                                  public void onPermissionsChecked(MultiplePermissionsReport report) {
+                                      if (report.areAllPermissionsGranted()) {
+                                          if (
+                                                  ActivityCompat.checkSelfPermission(
+                                                          rootView.getContext(),
+                                                          Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                                                          && ActivityCompat.checkSelfPermission(
+                                                          rootView.getContext(),
+                                                          Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                                          ) {
+                                              location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                                          }
+                                      }
+                                  }
 
-            @Override
-            public void onPermissionDenied(PermissionDeniedResponse response) {
+                                  @Override
+                                  public void onPermissionRationaleShouldBeShown(
+                                          List<PermissionRequest> permissions,
+                                          PermissionToken token
+                                  ) {
+                                      token.continuePermissionRequest();
+                                  }
+                              }
+                )
+                .check();
 
-            }
-
-            @Override
-            public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
-                token.continuePermissionRequest();
-            }
-        }).check();
-
-        List<AccessPoint> accessPointList = new RequestAps(Objects.requireNonNull(this.getContext())).getSortedList(sharedPreferences.getBoolean("OfflineRouter", false), sharedPreferences.getInt("RouterCount", 10));
+        List<AccessPoint> accessPointList = new RequestAps(
+                Objects.requireNonNull(this.getContext())).
+                getSortedList(
+                        sharedPreferences.getBoolean("OfflineRouter", false),
+                        sharedPreferences.getInt("RouterCount", 10)
+                );
         showApList(accessPointList);
 
         return rootView;
