@@ -38,4 +38,5 @@
     <string name="newsArticleRead">Beitrag lesen</string>
     <string name="mapLoading">Lade Karte…</string>
     <string name="locationNoGps">GPS nicht aktiviert</string>
+    <string name="dummyText">Text Dummy</string>
 </resources>

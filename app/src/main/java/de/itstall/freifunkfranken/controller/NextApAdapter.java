@@ -18,6 +18,7 @@ import de.itstall.freifunkfranken.model.AccessPoint;
 public class NextApAdapter extends RecyclerView.Adapter<NextApAdapter.ViewHolder> {
     private static final String TAG = NextApAdapter.class.getSimpleName();
     private List<AccessPoint> accessPointList;
+    private OnItemClicked onClick;
 
     public NextApAdapter(List<AccessPoint> aps) {
         this.accessPointList = aps;
@@ -26,7 +27,9 @@ public class NextApAdapter extends RecyclerView.Adapter<NextApAdapter.ViewHolder
     @NonNull
     @Override
     public NextApAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        @SuppressLint("InflateParams") View viewApsItem = LayoutInflater.from(parent.getContext()).inflate(R.layout.nextap_item, null);
+        @SuppressLint("InflateParams") View viewApsItem = LayoutInflater
+                .from(parent.getContext())
+                .inflate(R.layout.nextap_item, null);
 
         return new ViewHolder(viewApsItem);
     }
@@ -36,17 +39,40 @@ public class NextApAdapter extends RecyclerView.Adapter<NextApAdapter.ViewHolder
     public void onBindViewHolder(NextApAdapter.ViewHolder viewHolder, int position) {
         viewHolder.tvAp.setText(accessPointList.get(position).getName());
         viewHolder.tvStatus.setText(
-                accessPointList.get(position).isOnline() ? R.string.statusOnline : R.string.statusOffline
+                accessPointList.get(position)
+                        .isOnline() ? R.string.statusOnline : R.string.statusOffline
         );
-        viewHolder.tvDistance.setText(
-                String.format("%d m", accessPointList.get(position).getDistance())
-        );
-        viewHolder.tvStatus.setTextColor((accessPointList.get(position).isOnline()) ? Color.GREEN : Color.RED);
+
+        double distance = accessPointList.get(position).getDistance();
+        String distanceText = "";
+
+        if (distance > 999) distanceText = String.format("%3.2f km", distance / 1000);
+        else distanceText = String.format("%3.0f m", distance);
+
+        viewHolder.tvDistance.setText(distanceText);
+
+        viewHolder.tvStatus.setTextColor(
+                (accessPointList.get(position).isOnline()) ? Color.GREEN : Color.RED);
+
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClick.onItemClick(position);
+            }
+        });
+    }
+
+    public void setOnClick(OnItemClicked onClick) {
+        this.onClick = onClick;
     }
 
     @Override
     public int getItemCount() {
         return accessPointList.size();
+    }
+
+    public interface OnItemClicked {
+        void onItemClick(int position);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

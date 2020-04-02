@@ -3,14 +3,18 @@ package de.itstall.freifunkfranken.view;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
@@ -32,12 +36,13 @@ import de.itstall.freifunkfranken.controller.NextApAdapter;
 import de.itstall.freifunkfranken.controller.RequestAps;
 import de.itstall.freifunkfranken.model.AccessPoint;
 
-public class NextApFragment extends Fragment {
+public class NextApFragment extends Fragment implements NextApAdapter.OnItemClicked {
     public static Location location;
     private RecyclerView rvAps;
     private View rootView;
     private SharedPreferences sharedPreferences;
     private LocationManager locationManager;
+    private List<AccessPoint> accessPointList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,6 +66,9 @@ public class NextApFragment extends Fragment {
         locationManager = (LocationManager) rootView.getContext()
                 .getApplicationContext()
                 .getSystemService(Context.LOCATION_SERVICE);
+
+        String locationProvider = getEnabledLocationProvider();
+
         Dexter.withActivity((Activity) rootView.getContext())
                 .withPermissions(
                         Manifest.permission.ACCESS_FINE_LOCATION,
@@ -68,17 +76,26 @@ public class NextApFragment extends Fragment {
                 )
                 .withListener(new MultiplePermissionsListener() {
                                   @Override
-                                  public void onPermissionsChecked(MultiplePermissionsReport report) {
+                                  public void onPermissionsChecked(
+                                          MultiplePermissionsReport report
+                                  ) {
                                       if (report.areAllPermissionsGranted()) {
                                           if (
                                                   ActivityCompat.checkSelfPermission(
                                                           rootView.getContext(),
-                                                          Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                                                          Manifest
+                                                                  .permission
+                                                                  .ACCESS_FINE_LOCATION
+                                                  ) == PackageManager.PERMISSION_GRANTED
                                                           && ActivityCompat.checkSelfPermission(
                                                           rootView.getContext(),
-                                                          Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                                                          Manifest
+                                                                  .permission
+                                                                  .ACCESS_COARSE_LOCATION
+                                                  ) == PackageManager.PERMISSION_GRANTED
                                           ) {
-                                              location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                                              location = locationManager
+                                                      .getLastKnownLocation(locationProvider);
                                           }
                                       }
                                   }
@@ -94,12 +111,13 @@ public class NextApFragment extends Fragment {
                 )
                 .check();
 
-        List<AccessPoint> accessPointList = new RequestAps(
+        accessPointList = new RequestAps(
                 Objects.requireNonNull(this.getContext())).
                 getSortedList(
                         sharedPreferences.getBoolean("OfflineRouter", false),
                         sharedPreferences.getInt("RouterCount", 10)
                 );
+
         showApList(accessPointList);
 
         return rootView;
@@ -109,5 +127,51 @@ public class NextApFragment extends Fragment {
         NextApAdapter nextApAdapter = new NextApAdapter(accessPointList);
         rvAps.setAdapter(nextApAdapter);
         rvAps.setItemAnimator(new DefaultItemAnimator());
+        nextApAdapter.setOnClick(this);
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        // TODO: Start navigation
+
+        // Create a Uri from an intent string. Use the result to create an Intent.
+        Uri gmmIntentUri = Uri.parse("google.navigation:q=" +
+                accessPointList.get(position).getLat() + "," +
+                accessPointList.get(position).getLon());
+
+        // Create an Intent from gmmIntentUri. Set the action to ACTION_VIEW
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        // Make the Intent explicit by setting the Google Maps package
+        mapIntent.setPackage("com.google.android.apps.maps");
+
+        // Attempt to start an activity that can handle the Intent
+        if (mapIntent.resolveActivity(getContext().getPackageManager()) != null) {
+            startActivity(mapIntent);
+        }
+    }
+
+    private String getEnabledLocationProvider() {
+        LocationManager locationManager = (LocationManager) rootView
+                .getContext()
+                .getSystemService(Context.LOCATION_SERVICE);
+
+        //Kriterien um den LocationProvider zu finden
+        Criteria criteria = new Criteria();
+
+        //Gebe Namen des Providers zurück, der auf die Kriterien am besten passt
+        String bestProvider = locationManager.getBestProvider(criteria, true);
+
+        boolean enabled = locationManager.isProviderEnabled(bestProvider);
+
+        if (!enabled) {
+            Toast.makeText(
+                    rootView.getContext(),
+                    "No location provider enabled!",
+                    Toast.LENGTH_LONG
+            ).show();
+
+            return null;
+        }
+        return bestProvider;
     }
 }

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
@@ -56,9 +58,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         public void onLocationChanged(Location location) {
             if (mMap != null) {
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                        new LatLng(location.getLatitude(), location.getLongitude()), mMap.getCameraPosition().zoom)
+                        new LatLng(
+                                location.getLatitude(),
+                                location.getLongitude()),
+                        mMap.getCameraPosition().zoom)
                 );
-                sharedPreferences.edit().putInt("mapZoom", (int) mMap.getCameraPosition().zoom).apply();
+                sharedPreferences.edit()
+                        .putInt("mapZoom", (int) mMap.getCameraPosition().zoom).apply();
             }
         }
 
@@ -75,20 +81,31 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(
+            LayoutInflater inflater,
+            ViewGroup container,
+            Bundle savedInstanceState
+    ) {
         rootView = inflater.inflate(R.layout.maps_fragment, container, false);
 
         progressDialog = new ProgressDialog(rootView.getContext());
         progressDialog.setMessage(getResources().getString(R.string.mapLoading));
         progressDialog.show();
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapFragment);
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
+                .findFragmentById(R.id.mapFragment);
         if (mapFragment != null) mapFragment.getMapAsync(this);
 
-        sharedPreferences = rootView.getContext().getSharedPreferences(getResources().getString(R.string.app_name), 0);
+        sharedPreferences = rootView.getContext()
+                .getSharedPreferences(getResources().getString(R.string.app_name), 0);
 
         customLocationListener = new CustomLocationListener(locationListener);
-        locationManager = (LocationManager) rootView.getContext().getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) rootView.getContext()
+                .getApplicationContext()
+                .getSystemService(Context.LOCATION_SERVICE);
+
+        String locationProvider = getEnabledLocationProvider();
+
         Dexter.withActivity((Activity) rootView.getContext())
                 .withPermissions(
                         Manifest.permission.ACCESS_FINE_LOCATION,
@@ -96,23 +113,39 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                 )
                 .withListener(new MultiplePermissionsListener() {
                                   @Override
-                                  public void onPermissionsChecked(MultiplePermissionsReport report) {
+                                  public void onPermissionsChecked(
+                                          MultiplePermissionsReport report
+                                  ) {
                                       if (report.areAllPermissionsGranted()) {
                                           if (
                                                   ActivityCompat.checkSelfPermission(
                                                           rootView.getContext(),
-                                                          Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                                                          Manifest
+                                                                  .permission
+                                                                  .ACCESS_FINE_LOCATION
+                                                  ) == PackageManager.PERMISSION_GRANTED
                                                           && ActivityCompat.checkSelfPermission(
                                                           rootView.getContext(),
-                                                          Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                                                          Manifest
+                                                                  .permission
+                                                                  .ACCESS_COARSE_LOCATION
+                                                  ) == PackageManager.PERMISSION_GRANTED
                                           ) {
-                                              locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 25, customLocationListener);
+                                              locationManager
+                                                      .requestLocationUpdates(
+                                                              locationProvider,
+                                                              3000,
+                                                              25,
+                                                              customLocationListener);
                                           }
                                       }
                                   }
 
                                   @Override
-                                  public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                                  public void onPermissionRationaleShouldBeShown(
+                                          List<PermissionRequest> permissions,
+                                          PermissionToken token
+                                  ) {
                                       token.continuePermissionRequest();
                                   }
                               }
@@ -123,15 +156,27 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void showApsOnMap() {
-        List<AccessPoint> accessPointList = new RequestAps(Objects.requireNonNull(this.getContext())).getSortedList(sharedPreferences.getBoolean("MapOfflineRouter", false), 0);
+        List<AccessPoint> accessPointList = new RequestAps(
+                Objects.requireNonNull(
+                        this.getContext()))
+                .getSortedList(
+                        sharedPreferences.getBoolean(
+                                "MapOfflineRouter",
+                                false)
+                        , 0);
 
         for (int i = 0; i < accessPointList.size(); i++) {
-            LatLng ap = new LatLng(accessPointList.get(i).getLat(), accessPointList.get(i).getLon());
-            MarkerOptions markerOptions = new MarkerOptions().position(ap).title(accessPointList.get(i).getName());
+            LatLng ap = new LatLng(
+                    accessPointList.get(i).getLat(), accessPointList.get(i).getLon());
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(ap)
+                    .title(accessPointList.get(i).getName());
             if (accessPointList.get(i).isOnline())
-                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                markerOptions.icon(
+                        BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
             else
-                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                markerOptions.icon(
+                        BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
             mMap.addMarker(markerOptions);
         }
     }
@@ -175,5 +220,29 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                 token.continuePermissionRequest();
             }
         }).check();
+    }
+
+    private String getEnabledLocationProvider() {
+        LocationManager locationManager = (LocationManager) rootView.getContext()
+                .getSystemService(Context.LOCATION_SERVICE);
+
+        //Kriterien um den LocationProvider zu finden
+        Criteria criteria = new Criteria();
+
+        //Gebe Namen des Providers zurück, der auf die Kriterien am besten passt
+        String bestProvider = locationManager.getBestProvider(criteria, true);
+
+        boolean enabled = locationManager.isProviderEnabled(bestProvider);
+
+        if (!enabled) {
+            Toast.makeText(
+                    rootView.getContext(),
+                    "No location provider enabled!",
+                    Toast.LENGTH_LONG
+            ).show();
+
+            return null;
+        }
+        return bestProvider;
     }
 }
