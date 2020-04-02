@@ -40,7 +40,6 @@ public class NextApFragment extends Fragment implements NextApAdapter.OnItemClic
     public static Location location;
     private RecyclerView rvAps;
     private View rootView;
-    private SharedPreferences sharedPreferences;
     private LocationManager locationManager;
     private List<AccessPoint> accessPointList;
     private String locationProvider;
@@ -51,22 +50,16 @@ public class NextApFragment extends Fragment implements NextApAdapter.OnItemClic
     }
 
     @Override
-    public View onCreateView(
-            LayoutInflater inflater,
-            ViewGroup container,
-            Bundle savedInstanceState
-    ) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.nextap_fragment, container, false);
 
-        sharedPreferences = rootView.getContext()
+        SharedPreferences sharedPreferences = rootView.getContext()
                 .getSharedPreferences(getResources().getString(R.string.app_name), 0);
 
         rvAps = rootView.findViewById(R.id.rvAps);
         rvAps.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        locationManager = (LocationManager) rootView.getContext()
-                .getApplicationContext()
-                .getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) rootView.getContext().getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
 
         Dexter.withActivity((Activity) rootView.getContext())
                 .withPermissions(
@@ -75,38 +68,19 @@ public class NextApFragment extends Fragment implements NextApAdapter.OnItemClic
                 )
                 .withListener(new MultiplePermissionsListener() {
                                   @Override
-                                  public void onPermissionsChecked(
-                                          MultiplePermissionsReport report
-                                  ) {
+                                  public void onPermissionsChecked(MultiplePermissionsReport report) {
                                       if (report.areAllPermissionsGranted()) {
-                                          if (
-                                                  ActivityCompat.checkSelfPermission(
-                                                          rootView.getContext(),
-                                                          Manifest
-                                                                  .permission
-                                                                  .ACCESS_FINE_LOCATION
-                                                  ) == PackageManager.PERMISSION_GRANTED
-                                                          && ActivityCompat.checkSelfPermission(
-                                                          rootView.getContext(),
-                                                          Manifest
-                                                                  .permission
-                                                                  .ACCESS_COARSE_LOCATION
-                                                  ) == PackageManager.PERMISSION_GRANTED
-                                          ) {
+                                          if (ActivityCompat.checkSelfPermission(rootView.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(rootView.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                                               locationProvider = getEnabledLocationProvider();
 
                                               assert locationProvider != null;
-                                              location = locationManager
-                                                      .getLastKnownLocation(locationProvider);
+                                              location = locationManager.getLastKnownLocation(locationProvider);
                                           }
                                       }
                                   }
 
                                   @Override
-                                  public void onPermissionRationaleShouldBeShown(
-                                          List<PermissionRequest> permissions,
-                                          PermissionToken token
-                                  ) {
+                                  public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
                                       token.continuePermissionRequest();
                                   }
                               }
@@ -141,7 +115,7 @@ public class NextApFragment extends Fragment implements NextApAdapter.OnItemClic
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
         mapIntent.setPackage("com.google.android.apps.maps");
 
-        if (mapIntent.resolveActivity(getContext().getPackageManager()) != null) {
+        if (mapIntent.resolveActivity(Objects.requireNonNull(getContext()).getPackageManager()) != null) {
             startActivity(mapIntent);
         }
     }
@@ -151,12 +125,12 @@ public class NextApFragment extends Fragment implements NextApAdapter.OnItemClic
                 .getContext()
                 .getSystemService(Context.LOCATION_SERVICE);
 
-        //Kriterien um den LocationProvider zu finden
         Criteria criteria = new Criteria();
 
-        //Gebe Namen des Providers zurück, der auf die Kriterien am besten passt
+        assert locationManager != null;
         String bestProvider = locationManager.getBestProvider(criteria, true);
 
+        assert bestProvider != null;
         boolean enabled = locationManager.isProviderEnabled(bestProvider);
 
         if (!enabled) {

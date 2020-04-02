@@ -27,9 +27,7 @@ public class NextApAdapter extends RecyclerView.Adapter<NextApAdapter.ViewHolder
     @NonNull
     @Override
     public NextApAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        @SuppressLint("InflateParams") View viewApsItem = LayoutInflater
-                .from(parent.getContext())
-                .inflate(R.layout.nextap_item, null);
+        @SuppressLint("InflateParams") View viewApsItem = LayoutInflater.from(parent.getContext()).inflate(R.layout.nextap_item, null);
 
         return new ViewHolder(viewApsItem);
     }
@@ -38,10 +36,7 @@ public class NextApAdapter extends RecyclerView.Adapter<NextApAdapter.ViewHolder
     @Override
     public void onBindViewHolder(NextApAdapter.ViewHolder viewHolder, int position) {
         viewHolder.tvAp.setText(accessPointList.get(position).getName());
-        viewHolder.tvStatus.setText(
-                accessPointList.get(position)
-                        .isOnline() ? R.string.statusOnline : R.string.statusOffline
-        );
+        viewHolder.tvStatus.setText(accessPointList.get(position).isOnline() ? R.string.statusOnline : R.string.statusOffline);
 
         double distance = accessPointList.get(position).getDistance();
         String distanceText = "";
@@ -51,8 +46,7 @@ public class NextApAdapter extends RecyclerView.Adapter<NextApAdapter.ViewHolder
 
         viewHolder.tvDistance.setText(distanceText);
 
-        viewHolder.tvStatus.setTextColor(
-                (accessPointList.get(position).isOnline()) ? Color.GREEN : Color.RED);
+        viewHolder.tvStatus.setTextColor((accessPointList.get(position).isOnline()) ? Color.GREEN : Color.RED);
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

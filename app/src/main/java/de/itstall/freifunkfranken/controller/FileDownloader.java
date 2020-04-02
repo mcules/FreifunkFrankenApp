@@ -2,7 +2,6 @@ package de.itstall.freifunkfranken.controller;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -90,16 +89,14 @@ public class FileDownloader extends AsyncTask<String, Void, String> {
         progressDialog = new ProgressDialog(mainActivity);
         progressDialog.setMessage("Downloading Data...");
         progressDialog.show();
-        progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            public void onCancel(DialogInterface arg0) {
-                de.itstall.freifunkfranken.controller.FileDownloader.this.cancel(true);
-            }
-        });
+        progressDialog.setOnCancelListener(arg0 -> FileDownloader.this.cancel(true));
     }
 
     protected void onPostExecute(String string) {
         super.onPostExecute(string);
+
         if (progressDialog != null) progressDialog.dismiss();
+
         mainActivity.downloadDone = true;
         mainActivity.loadFragment(mainActivity.getFragment(mainActivity.selectedTab));
     }
