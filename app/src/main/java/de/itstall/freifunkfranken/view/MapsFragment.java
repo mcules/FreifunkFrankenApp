@@ -25,16 +25,14 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionDeniedResponse;
-import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
-import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.util.List;
 import java.util.Objects;
@@ -101,59 +99,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         sharedPreferences = rootView.getContext()
                 .getSharedPreferences(getResources().getString(R.string.app_name), 0);
 
-        customLocationListener = new CustomLocationListener(locationListener);
-        locationManager = (LocationManager) rootView.getContext()
-                .getApplicationContext()
-                .getSystemService(Context.LOCATION_SERVICE);
-
-        Dexter.withActivity((Activity) rootView.getContext())
-                .withPermissions(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                )
-                .withListener(new MultiplePermissionsListener() {
-                                  @Override
-                                  public void onPermissionsChecked(
-                                          MultiplePermissionsReport report
-                                  ) {
-                                      if (report.areAllPermissionsGranted()) {
-                                          if (
-                                                  ActivityCompat.checkSelfPermission(
-                                                          rootView.getContext(),
-                                                          Manifest
-                                                                  .permission
-                                                                  .ACCESS_FINE_LOCATION
-                                                  ) == PackageManager.PERMISSION_GRANTED
-                                                          && ActivityCompat.checkSelfPermission(
-                                                          rootView.getContext(),
-                                                          Manifest
-                                                                  .permission
-                                                                  .ACCESS_COARSE_LOCATION
-                                                  ) == PackageManager.PERMISSION_GRANTED
-                                          ) {
-                                              locationProvider = getEnabledLocationProvider();
-                                              
-                                              assert locationProvider != null;
-                                              locationManager
-                                                      .requestLocationUpdates(
-                                                              locationProvider,
-                                                              3000,
-                                                              25,
-                                                              customLocationListener);
-                                          }
-                                      }
-                                  }
-
-                                  @Override
-                                  public void onPermissionRationaleShouldBeShown(
-                                          List<PermissionRequest> permissions,
-                                          PermissionToken token
-                                  ) {
-                                      token.continuePermissionRequest();
-                                  }
-                              }
-                )
-                .check();
+        getLocation();
 
         return rootView;
     }
@@ -188,9 +134,16 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                new LatLng(50.0489, 10.2301),
-                sharedPreferences.getInt("mapZoom", 10)));
+        LatLng latLng = new LatLng(50.0489, 10.2301);
+
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(latLng)
+                .zoom(sharedPreferences.getInt("mapZoom", 10))
+                .build();
+
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        mMap.setMyLocationEnabled(true);
+
         showApsOnMap();
 
         if (progressDialog != null) progressDialog.dismiss();
@@ -205,24 +158,63 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onResume() {
         super.onResume();
-        Dexter.withActivity((Activity) rootView.getContext()).withPermission(Manifest.permission.ACCESS_FINE_LOCATION).withListener(new PermissionListener() {
-            @Override
-            public void onPermissionGranted(PermissionGrantedResponse response) {
-                if (ActivityCompat.checkSelfPermission(rootView.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 25, customLocationListener);
-                }
-            }
+        getLocation();
+    }
 
-            @Override
-            public void onPermissionDenied(PermissionDeniedResponse response) {
+    private void getLocation() {
+        customLocationListener = new CustomLocationListener(locationListener);
+        locationManager = (LocationManager) rootView.getContext()
+                .getApplicationContext()
+                .getSystemService(Context.LOCATION_SERVICE);
 
-            }
+        Dexter.withActivity((Activity) rootView.getContext())
+                .withPermissions(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+                .withListener(new MultiplePermissionsListener() {
+                                  @Override
+                                  public void onPermissionsChecked(
+                                          MultiplePermissionsReport report
+                                  ) {
+                                      if (report.areAllPermissionsGranted()) {
+                                          if (
+                                                  ActivityCompat.checkSelfPermission(
+                                                          rootView.getContext(),
+                                                          Manifest
+                                                                  .permission
+                                                                  .ACCESS_FINE_LOCATION
+                                                  ) == PackageManager.PERMISSION_GRANTED
+                                                          && ActivityCompat.checkSelfPermission(
+                                                          rootView.getContext(),
+                                                          Manifest
+                                                                  .permission
+                                                                  .ACCESS_COARSE_LOCATION
+                                                  ) == PackageManager.PERMISSION_GRANTED
+                                          ) {
+                                              locationProvider = getEnabledLocationProvider();
 
-            @Override
-            public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
-                token.continuePermissionRequest();
-            }
-        }).check();
+                                              assert locationProvider != null;
+                                              locationManager
+                                                      .requestLocationUpdates(
+                                                              locationProvider,
+                                                              3000,
+                                                              25,
+                                                              customLocationListener);
+                                          }
+                                      }
+                                  }
+
+                                  @Override
+                                  public void onPermissionRationaleShouldBeShown(
+                                          List<PermissionRequest> permissions,
+                                          PermissionToken token
+                                  ) {
+                                      token.continuePermissionRequest();
+                                  }
+                              }
+                )
+                .check();
     }
 
     private String getEnabledLocationProvider() {
