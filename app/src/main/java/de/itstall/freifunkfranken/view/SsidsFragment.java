@@ -19,6 +19,7 @@ import de.itstall.freifunkfranken.controller.SsidsFragmentListener;
 import de.itstall.freifunkfranken.controller.SsidsRequest;
 import de.itstall.freifunkfranken.model.Ssid;
 
+// Shows the SSID list and adds to mobile
 public class SsidsFragment extends androidx.fragment.app.Fragment {
     private static final String TAG = SsidsFragment.class.getSimpleName();
     public static List<Ssid> ssidList;
@@ -40,12 +41,16 @@ public class SsidsFragment extends androidx.fragment.app.Fragment {
         Button ssidsFragmentBtnAddAll = rootView.findViewById(R.id.ssidsFragmentBtnAddAll);
         ssidsFragmentBtnAddAll.setOnClickListener(ssidsFragmentListener);
 
+        // Request SSID list
         ssidList = new SsidsRequest(Objects.requireNonNull(this.getContext())).getSsidList();
+
+        // Show SSID list
         showSsidList(ssidList);
 
         return rootView;
     }
 
+    // bind list to view
     private void showSsidList(List<Ssid> ssidList) {
         SsidsAdapter ssidsAdapter = new SsidsAdapter(ssidList);
         rvSsids.setAdapter(ssidsAdapter);

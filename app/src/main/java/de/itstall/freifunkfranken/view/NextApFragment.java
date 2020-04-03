@@ -36,6 +36,9 @@ import de.itstall.freifunkfranken.controller.NextApAdapter;
 import de.itstall.freifunkfranken.controller.NextApsRequest;
 import de.itstall.freifunkfranken.model.AccessPoint;
 
+/*
+ * Shows the next x accesspoints and the distance
+ */
 public class NextApFragment extends Fragment implements NextApAdapter.OnItemClicked {
     public static Location location;
     private RecyclerView rvAps;
@@ -53,8 +56,7 @@ public class NextApFragment extends Fragment implements NextApAdapter.OnItemClic
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.nextap_fragment, container, false);
 
-        SharedPreferences sharedPreferences = rootView.getContext()
-                .getSharedPreferences(getResources().getString(R.string.app_name), 0);
+        SharedPreferences sharedPreferences = rootView.getContext().getSharedPreferences(getResources().getString(R.string.app_name), 0);
 
         rvAps = rootView.findViewById(R.id.rvAps);
         rvAps.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -63,6 +65,7 @@ public class NextApFragment extends Fragment implements NextApAdapter.OnItemClic
 
         checkPermissions();
 
+        // Get accesspoint list sorted by distance
         accessPointList = new NextApsRequest(
                 Objects.requireNonNull(this.getContext())).
                 getSortedList(
@@ -75,6 +78,7 @@ public class NextApFragment extends Fragment implements NextApAdapter.OnItemClic
         return rootView;
     }
 
+    // request and check permissions
     private void checkPermissions() {
         Dexter.withActivity((Activity) rootView.getContext())
                 .withPermissions(
@@ -86,6 +90,7 @@ public class NextApFragment extends Fragment implements NextApAdapter.OnItemClic
                                   public void onPermissionsChecked(MultiplePermissionsReport report) {
                                       if (report.areAllPermissionsGranted()) {
                                           if (ActivityCompat.checkSelfPermission(rootView.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(rootView.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                                              // all permissions granted, get current location
                                               locationProvider = getEnabledLocationProvider();
 
                                               assert locationProvider != null;
@@ -103,6 +108,7 @@ public class NextApFragment extends Fragment implements NextApAdapter.OnItemClic
                 .check();
     }
 
+    // bind list to view
     private void showApList(List<AccessPoint> accessPointList) {
         NextApAdapter nextApAdapter = new NextApAdapter(accessPointList);
         rvAps.setAdapter(nextApAdapter);
@@ -110,6 +116,7 @@ public class NextApFragment extends Fragment implements NextApAdapter.OnItemClic
         nextApAdapter.setOnClick(this);
     }
 
+    // start navigation to accesspoint
     @Override
     public void onItemClick(int position) {
         Uri gmmIntentUri = Uri.parse("google.navigation:q=" +
@@ -124,6 +131,7 @@ public class NextApFragment extends Fragment implements NextApAdapter.OnItemClic
         }
     }
 
+    // check providers and get best one
     private String getEnabledLocationProvider() {
         LocationManager locationManager = (LocationManager) rootView
                 .getContext()

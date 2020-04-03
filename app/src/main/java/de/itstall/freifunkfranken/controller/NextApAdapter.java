@@ -15,15 +15,18 @@ import java.util.List;
 import de.itstall.freifunkfranken.R;
 import de.itstall.freifunkfranken.model.AccessPoint;
 
+// binds accesspoints to view
 public class NextApAdapter extends RecyclerView.Adapter<NextApAdapter.ViewHolder> {
     private static final String TAG = NextApAdapter.class.getSimpleName();
     private final List<AccessPoint> accessPointList;
     private OnItemClicked onClick;
 
+    // constructor adds accesspoint list to class variable
     public NextApAdapter(List<AccessPoint> aps) {
         this.accessPointList = aps;
     }
 
+    // viewHolder constructor
     @NonNull
     @Override
     public NextApAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -32,6 +35,7 @@ public class NextApAdapter extends RecyclerView.Adapter<NextApAdapter.ViewHolder
         return new ViewHolder(viewApsItem);
     }
 
+    // sets content for fields in view
     @SuppressLint("DefaultLocale")
     @Override
     public void onBindViewHolder(NextApAdapter.ViewHolder viewHolder, int position) {
@@ -51,19 +55,23 @@ public class NextApAdapter extends RecyclerView.Adapter<NextApAdapter.ViewHolder
         viewHolder.itemView.setOnClickListener(v -> onClick.onItemClick(position));
     }
 
+    // item was clicked
     public void setOnClick(OnItemClicked onClick) {
         this.onClick = onClick;
     }
 
+    // returns count of items
     @Override
     public int getItemCount() {
         return accessPointList.size();
     }
 
+    // item clicked interface
     public interface OnItemClicked {
         void onItemClick(int position);
     }
 
+    // bind fileds to viewHolder
     static class ViewHolder extends RecyclerView.ViewHolder {
         final TextView tvAp;
         final TextView tvStatus;

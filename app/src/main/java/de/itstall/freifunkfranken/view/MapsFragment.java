@@ -72,6 +72,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
         checkPermissions();
 
+        // if permissions granted, load map
         if (permissionsGranted) {
             SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapFragment);
 
@@ -85,6 +86,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         return rootView;
     }
 
+    // request and check permissions
     private void checkPermissions() {
         permissionsGranted = false;
 
@@ -110,6 +112,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                 .check();
     }
 
+    // load accesspoints and show on map
     private void showApsOnMap() {
         List<AccessPoint> accessPointList = new NextApsRequest(Objects.requireNonNull(this.getContext())).getSortedList(sharedPreferences.getBoolean("MapOfflineRouter", false), 0);
 
@@ -130,6 +133,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        // default location, will be overriden if location permission granted and located
         LatLng latLng = new LatLng(50.0489, 10.2301);
 
         CameraPosition cameraPosition = new CameraPosition.Builder()
@@ -141,6 +145,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         mMap.setMyLocationEnabled(true);
         mMap.setOnCameraIdleListener(mapsFragmentListener);
 
+        // get accesspoints and show on map
         showApsOnMap();
 
         if (progressDialog != null) progressDialog.dismiss();
@@ -148,6 +153,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onPause() {
+        // remove location updates
         if (permissionsGranted) locationManager.removeUpdates(customLocationListener);
         super.onPause();
     }
@@ -155,9 +161,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onResume() {
         super.onResume();
+        // get current location
         getLocation();
     }
 
+    // get current location
     private Location getLocation() {
         if (permissionsGranted) {
             customLocationListener = new CustomLocationListener(locationListener);
@@ -182,13 +190,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         else return new Location("");
     }
 
+    // request providers and get best one
     private String getEnabledLocationProvider() {
         LocationManager locationManager = (LocationManager) rootView.getContext().getSystemService(Context.LOCATION_SERVICE);
 
-        //Kriterien um den LocationProvider zu finden
         Criteria criteria = new Criteria();
 
-        //Gebe Namen des Providers zurück, der auf die Kriterien am besten passt
         assert locationManager != null;
         String bestProvider = locationManager.getBestProvider(criteria, true);
 
@@ -203,6 +210,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         return bestProvider;
     }
 
+    // change location to current
     public void changeLocation(Location location) {
         if (mMap != null) {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(

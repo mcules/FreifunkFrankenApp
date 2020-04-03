@@ -11,6 +11,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import de.itstall.freifunkfranken.R;
 
+/*
+ * Settings for the application
+ */
 public class SettingsActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private Switch settingsSwOfflineRouter, settingsSwMapOfflineRouter;
@@ -26,16 +29,22 @@ public class SettingsActivity extends AppCompatActivity {
         settingsSwMapOfflineRouter = findViewById(R.id.settingsSwMapOfflineRouter);
         settingsTxtRouterCount = findViewById(R.id.settingsTxtRouterCount);
 
+        // Set saved preferences to fields
         settingsTxtRouterCount.setText(String.valueOf(sharedPreferences.getInt("RouterCount", 10)));
         settingsSwOfflineRouter.setChecked(sharedPreferences.getBoolean("OfflineRouter", false));
         settingsSwMapOfflineRouter.setChecked(sharedPreferences.getBoolean("MapOfflineRouter", false));
+
         Button settingsBtnClose = findViewById(R.id.SettingsBtnClose);
+        // save and close activity
         settingsBtnClose.setOnClickListener(v -> {
             saveSettings();
             finish();
         });
     }
 
+    /*
+     * save settings to preferences
+     */
     private void saveSettings() {
         Editor editor = sharedPreferences.edit();
         editor.putBoolean("OfflineRouter", settingsSwOfflineRouter.isChecked());

@@ -16,14 +16,17 @@ import java.util.List;
 import de.itstall.freifunkfranken.R;
 import de.itstall.freifunkfranken.model.News;
 
+// Adapter to get news into recyclerview
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     private static final String TAG = NewsAdapter.class.getSimpleName();
     private final List<News> newsList;
 
+    // constructor adds newsList to class variable
     public NewsAdapter(List<News> newsList) {
         this.newsList = newsList;
     }
 
+    // viewHolder constructor
     @NonNull
     @Override
     public NewsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -32,6 +35,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         return new ViewHolder(viewNewsItem);
     }
 
+    // sets content for fields in view
     @Override
     public void onBindViewHolder(NewsAdapter.ViewHolder viewHolder, int position) {
         viewHolder.tvNewsDate.setText(newsList.get(position).getDate());
@@ -42,14 +46,17 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
                         viewHolder.itemView.getContext().getString(R.string.newsArticleRead) +
                         "</a>"
         ));
+        // make links in content clickable
         viewHolder.tvNewsDescription.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
+    // returns count of items
     @Override
     public int getItemCount() {
         return newsList.size();
     }
 
+    // bind fileds to viewHolder
     static class ViewHolder extends RecyclerView.ViewHolder {
         final TextView tvNewsTitle;
         final TextView tvNewsDate;

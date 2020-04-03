@@ -16,14 +16,17 @@ import java.util.Objects;
 
 import de.itstall.freifunkfranken.model.Ssid;
 
+// request ssid list from datafile
 public class SsidsRequest {
     private final List<Ssid> ssidList = new ArrayList<>();
 
+    // constructor
     public SsidsRequest(Context context) {
         String filename = "data.json";
         StringBuilder stringBuilder = new StringBuilder();
         File dataFile = new File(context.getFilesDir(), filename);
 
+        // read whole data file
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(dataFile));
             String line;
@@ -36,6 +39,7 @@ public class SsidsRequest {
             Log.e("ReadWriteFile", "Unable to read file: " + filename);
         }
 
+        // get ssid array and parse into list
         try {
             JSONObject jsonObject = new JSONObject(stringBuilder.toString());
             JSONArray jsonArray = jsonObject.getJSONArray("ssids");
@@ -47,6 +51,7 @@ public class SsidsRequest {
         }
     }
 
+    // return ssidlist
     public List<Ssid> getSsidList() {
         return ssidList;
     }

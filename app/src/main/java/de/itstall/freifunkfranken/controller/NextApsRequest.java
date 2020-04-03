@@ -18,15 +18,18 @@ import java.util.Objects;
 import de.itstall.freifunkfranken.model.AccessPoint;
 import de.itstall.freifunkfranken.view.NextApFragment;
 
+// request next accesspoint list from datafile
 public class NextApsRequest {
     private final List<AccessPoint> accessPointList = new ArrayList<>();
     private static final String TAG = NextApsRequest.class.getSimpleName();
 
+    // constructor
     public NextApsRequest(Context context) {
         String filename = "data.json";
         StringBuilder stringBuilder = new StringBuilder();
         File dataFile = new File(context.getFilesDir(), filename);
 
+        // read whole data file
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(dataFile));
             String line;
@@ -39,6 +42,7 @@ public class NextApsRequest {
             Log.e("ReadWriteFile", "Unable to read file: " + filename);
         }
 
+        // get ssid array and parse into list
         try {
             JSONObject jsonObject = new JSONObject(stringBuilder.toString());
             JSONArray nodes = jsonObject.getJSONArray("nodes");
@@ -59,9 +63,11 @@ public class NextApsRequest {
         }
     }
 
+    // return ssidlist
     public List<AccessPoint> getSortedList(boolean showOffline, int routerCount) {
         List<AccessPoint> routerList = new ArrayList<>();
 
+        // get distance for each accesspoint to current location
         for (int i = 0; i < accessPointList.size(); i++) {
             if(showOffline) {
                 if (NextApFragment.location != null)
@@ -76,8 +82,10 @@ public class NextApsRequest {
             }
         }
 
+        // sort list by distance
         Collections.sort(routerList, (o1, o2) -> Integer.compare(o1.getDistance(), o2.getDistance()));
 
+        // returns the passed number of accesspoints
         if (routerCount > 0) {
             List<AccessPoint> resultList = new ArrayList<>();
             for (int i = 0; i < routerCount; i++) {

@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import de.itstall.freifunkfranken.R;
 
+// shows the about page
 public class AboutActivity extends AppCompatActivity {
     @SuppressLint("ResourceType")
     @Override

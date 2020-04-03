@@ -21,6 +21,7 @@ public class SsidsAdapter extends RecyclerView.Adapter<SsidsAdapter.ViewHolder> 
         this.ssidList = ssids;
     }
 
+    // viewHolder constructor
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -29,11 +30,13 @@ public class SsidsAdapter extends RecyclerView.Adapter<SsidsAdapter.ViewHolder> 
         return new ViewHolder(viewSsidsItem);
     }
 
+    // sets content for fields in view
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         viewHolder.tvSsid.setText(ssidList.get(position).getSsid());
     }
 
+    // bind fileds to viewHolder
     @Override
     public int getItemCount() {
         return ssidList.size();

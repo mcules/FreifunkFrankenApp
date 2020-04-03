@@ -19,6 +19,7 @@ import java.util.Objects;
 
 import de.itstall.freifunkfranken.view.MainActivity;
 
+// file downloader class. Downloads url to filename
 public class FileDownloader extends AsyncTask<String, Void, String> {
     private final String filename;
     private final String downloadUrl;
@@ -26,12 +27,14 @@ public class FileDownloader extends AsyncTask<String, Void, String> {
     @SuppressLint("StaticFieldLeak")
     private final MainActivity mainActivity;
 
+    // constructor
     public FileDownloader(MainActivity mainActivity, String downloadUrl, String filename) {
         this.mainActivity = mainActivity;
         this.downloadUrl = downloadUrl;
         this.filename = filename;
     }
 
+    // start task in background
     @Override
     protected String doInBackground(String... strings) {
         HttpURLConnection urlConnection = null;
@@ -43,6 +46,7 @@ public class FileDownloader extends AsyncTask<String, Void, String> {
         String line;
         InputStream inputStream;
 
+        // try to download file from url
         try {
             url = new URL(downloadUrl);
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -62,6 +66,7 @@ public class FileDownloader extends AsyncTask<String, Void, String> {
             } finally {
                 if (reader != null) reader.close();
 
+                // save file to local storage
                 try {
                     saveFile = new File(Objects.requireNonNull(mainActivity).getFilesDir(), filename);
                     if (!saveFile.exists()) saveFile.createNewFile();
@@ -83,6 +88,7 @@ public class FileDownloader extends AsyncTask<String, Void, String> {
         return null;
     }
 
+    // start dialog to inform that a download is started now
     protected void onPreExecute() {
         super.onPreExecute();
         progressDialog = new ProgressDialog(mainActivity);
@@ -91,6 +97,7 @@ public class FileDownloader extends AsyncTask<String, Void, String> {
         progressDialog.setOnCancelListener(arg0 -> FileDownloader.this.cancel(true));
     }
 
+    // download was finished. Close dialog and load fragment
     protected void onPostExecute(String string) {
         super.onPostExecute(string);
 

@@ -18,6 +18,7 @@ import de.itstall.freifunkfranken.controller.NewsAdapter;
 import de.itstall.freifunkfranken.controller.NewsRequest;
 import de.itstall.freifunkfranken.model.News;
 
+// shows news in a list and present link to news page
 public class NewsFragment extends Fragment {
     private RecyclerView rvNews;
 
@@ -33,12 +34,14 @@ public class NewsFragment extends Fragment {
         rvNews = rootView.findViewById(R.id.rvNews);
         rvNews.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        // get list from json file
         List<News> newsList = new NewsRequest(Objects.requireNonNull(this.getContext())).getNewsList();
         showNewsList(newsList);
 
         return rootView;
     }
 
+    // bind list to view
     private void showNewsList(List<News> newsList) {
         NewsAdapter newsAdapter = new NewsAdapter(newsList);
         rvNews.setAdapter(newsAdapter);
