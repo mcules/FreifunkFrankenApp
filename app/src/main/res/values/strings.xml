@@ -18,15 +18,13 @@
     <string name="settingsSwMapOfflineRouter">Zeige offline Router an</string>
     <string name="settingsTvMap">Karte</string>
     <string name="aboutTvLizences">Lizenzen:</string>
-    <string name="aboutTvAppLizence">
-        &lt;ul&gt;
+    <string name="aboutTvAppLizence">&lt;ul&gt;
             &lt;li&gt;
                 &amp;nbsp;&amp;copy; 2020 Dennis Eisold, lizensiert unter GNU GPLv3&lt;br/&gt;
                 &amp;nbsp;Quellcode auf &lt;a href="https://github.com/mcules/FreifunkFrankenApp"&gt;GitHub.com&lt;/a&gt;
             &lt;/li&gt;
             &lt;li&gt;&amp;nbsp;Freifunk Logo von &lt;a href="https://wiki.freifunk.net/Freifunk-Styles#Logo"&gt;freifunk.net&lt;/a&gt; lizenziert unter CC BY-SA 3.0&lt;/li&gt;
-        &lt;/ul&gt;
-    </string>
+        &lt;/ul&gt;</string>
     <string name="aboutTvTitle">Über die Freifunk Franken App</string>
     <string name="newsTvDescription">Meine lange Beschreibung</string>
     <string name="newsTvTitle">Mein Titel</string>
@@ -38,4 +36,6 @@
     <string name="ssidSuggestionsAddedDescription">Du solltest gleich (kann ein wenig dauern) eine Benachrichtigung von deinem Gerät erhalten. Bitte bestätige hier die Frage zur Verbindung um das hinzufügen abzuschließen.</string>
     <string name="okay">Okay</string>
     <string name="noPermissionsGranted">Ohne Berechtigungen kannst du diese Funktion leider nicht nutzen.</string>
+    <string name="ssidAddSsidsTitle">SSIDs werden hinzugefügt</string>
+    <string name="ssidAddSsidsDescription">Dies kann, je nach Anzahl der SSIDs, eine Weile dauern.</string>
 </resources>

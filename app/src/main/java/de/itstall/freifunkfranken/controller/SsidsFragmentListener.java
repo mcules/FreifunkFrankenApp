@@ -1,6 +1,7 @@
 package de.itstall.freifunkfranken.controller;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -26,6 +27,7 @@ public class SsidsFragmentListener implements View.OnClickListener {
     private static final String TAG = SsidsFragmentListener.class.getSimpleName();
     private View view;
     private WifiManager wifiManager;
+    private ProgressDialog progressDialog;
 
     @Override
     public void onClick(View view) {
@@ -36,6 +38,10 @@ public class SsidsFragmentListener implements View.OnClickListener {
     private void addSsidsToMobile() {
         WifiConfiguration wifiConfig;
         final List<WifiNetworkSuggestion> suggestionList = new ArrayList<>();
+
+        if (Build.VERSION.SDK_INT < 29) {
+            showDialog(view.getContext().getResources().getString(R.string.ssidAddSsidsTitle), view.getContext().getResources().getString(R.string.ssidAddSsidsDescription));
+        }
 
         for (int i = 0; i < SsidsFragment.ssidList.size(); i++) {
             if (Build.VERSION.SDK_INT >= 29) {
@@ -57,6 +63,7 @@ public class SsidsFragmentListener implements View.OnClickListener {
                 wifiManager.addNetwork(wifiConfig);
             }
         }
+
         if (Build.VERSION.SDK_INT >= 29) {
             deleteSuggestions();
             wifiManager = (WifiManager) view.getContext().getApplicationContext().getSystemService(WIFI_SERVICE);
@@ -65,13 +72,7 @@ public class SsidsFragmentListener implements View.OnClickListener {
             if (wifiManager.addNetworkSuggestions(suggestionList) != WifiManager.STATUS_NETWORK_SUGGESTIONS_SUCCESS) {
                 Log.e(TAG, "Add wifi suggestion list failed");
             } else {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(view.getContext());
-                alertDialogBuilder
-                        .setTitle(view.getContext().getResources().getString(R.string.ssidSuggestionsAddedTitle))
-                        .setMessage(view.getContext().getResources().getString(R.string.ssidSuggestionsAddedDescription))
-                        .setPositiveButton(view.getContext().getResources().getString(R.string.okay), (dialog, which) -> dialog.dismiss());
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
+                showDialog(view.getContext().getResources().getString(R.string.ssidSuggestionsAddedTitle), view.getContext().getResources().getString(R.string.ssidSuggestionsAddedDescription));
             }
 
             final IntentFilter intentFilter = new IntentFilter(WifiManager.ACTION_WIFI_NETWORK_SUGGESTION_POST_CONNECTION);
@@ -93,5 +94,15 @@ public class SsidsFragmentListener implements View.OnClickListener {
 
         assert wifiManager != null;
         wifiManager.removeNetworkSuggestions(suggestionList);
+    }
+
+    private void showDialog(String title, String description) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(view.getContext());
+        alertDialogBuilder
+                .setTitle(title)
+                .setMessage(description)
+                .setPositiveButton(view.getContext().getResources().getString(R.string.okay), (dialog, which) -> dialog.dismiss());
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 }
