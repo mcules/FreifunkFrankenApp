@@ -33,7 +33,7 @@ import java.util.Objects;
 
 import de.itstall.freifunkfranken.R;
 import de.itstall.freifunkfranken.controller.NextApAdapter;
-import de.itstall.freifunkfranken.controller.RequestAps;
+import de.itstall.freifunkfranken.controller.NextApsRequest;
 import de.itstall.freifunkfranken.model.AccessPoint;
 
 public class NextApFragment extends Fragment implements NextApAdapter.OnItemClicked {
@@ -63,7 +63,7 @@ public class NextApFragment extends Fragment implements NextApAdapter.OnItemClic
 
         checkPermissions();
 
-        accessPointList = new RequestAps(
+        accessPointList = new NextApsRequest(
                 Objects.requireNonNull(this.getContext())).
                 getSortedList(
                         sharedPreferences.getBoolean("OfflineRouter", false),

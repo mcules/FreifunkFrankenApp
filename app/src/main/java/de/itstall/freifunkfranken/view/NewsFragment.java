@@ -15,7 +15,7 @@ import java.util.Objects;
 
 import de.itstall.freifunkfranken.R;
 import de.itstall.freifunkfranken.controller.NewsAdapter;
-import de.itstall.freifunkfranken.controller.RequestNews;
+import de.itstall.freifunkfranken.controller.NewsRequest;
 import de.itstall.freifunkfranken.model.News;
 
 public class NewsFragment extends Fragment {
@@ -33,7 +33,7 @@ public class NewsFragment extends Fragment {
         rvNews = rootView.findViewById(R.id.rvNews);
         rvNews.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        List<News> newsList = new RequestNews(Objects.requireNonNull(this.getContext())).getNewsList();
+        List<News> newsList = new NewsRequest(Objects.requireNonNull(this.getContext())).getNewsList();
         showNewsList(newsList);
 
         return rootView;

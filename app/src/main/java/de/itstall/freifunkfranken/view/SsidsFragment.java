@@ -14,9 +14,9 @@ import java.util.List;
 import java.util.Objects;
 
 import de.itstall.freifunkfranken.R;
-import de.itstall.freifunkfranken.controller.RequestSsids;
 import de.itstall.freifunkfranken.controller.SsidsAdapter;
 import de.itstall.freifunkfranken.controller.SsidsFragmentListener;
+import de.itstall.freifunkfranken.controller.SsidsRequest;
 import de.itstall.freifunkfranken.model.Ssid;
 
 public class SsidsFragment extends androidx.fragment.app.Fragment {
@@ -40,7 +40,7 @@ public class SsidsFragment extends androidx.fragment.app.Fragment {
         Button ssidsFragmentBtnAddAll = rootView.findViewById(R.id.ssidsFragmentBtnAddAll);
         ssidsFragmentBtnAddAll.setOnClickListener(ssidsFragmentListener);
 
-        ssidList = new RequestSsids(Objects.requireNonNull(this.getContext())).getSsidList();
+        ssidList = new SsidsRequest(Objects.requireNonNull(this.getContext())).getSsidList();
         showSsidList(ssidList);
 
         return rootView;

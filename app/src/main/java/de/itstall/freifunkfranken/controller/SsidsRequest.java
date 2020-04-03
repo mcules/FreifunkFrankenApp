@@ -16,10 +16,10 @@ import java.util.Objects;
 
 import de.itstall.freifunkfranken.model.Ssid;
 
-public class RequestSsids {
+public class SsidsRequest {
     private final List<Ssid> ssidList = new ArrayList<>();
 
-    public RequestSsids(Context context) {
+    public SsidsRequest(Context context) {
         String filename = "data.json";
         StringBuilder stringBuilder = new StringBuilder();
         File dataFile = new File(context.getFilesDir(), filename);

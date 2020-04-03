@@ -16,11 +16,11 @@ import java.util.Objects;
 
 import de.itstall.freifunkfranken.model.News;
 
-public class RequestNews {
-    private static final String TAG = RequestNews.class.getSimpleName();
+public class NewsRequest {
+    private static final String TAG = NewsRequest.class.getSimpleName();
     private final List<News> newsList = new ArrayList<>();
 
-    public RequestNews(Context context) {
+    public NewsRequest(Context context) {
         String filename = "data.json";
         StringBuilder stringBuilder = new StringBuilder();
         File dataFile = new File(context.getFilesDir(), filename);

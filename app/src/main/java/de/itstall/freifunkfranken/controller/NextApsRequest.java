@@ -18,11 +18,11 @@ import java.util.Objects;
 import de.itstall.freifunkfranken.model.AccessPoint;
 import de.itstall.freifunkfranken.view.NextApFragment;
 
-public class RequestAps {
+public class NextApsRequest {
     private final List<AccessPoint> accessPointList = new ArrayList<>();
-    private static final String TAG = RequestAps.class.getSimpleName();
+    private static final String TAG = NextApsRequest.class.getSimpleName();
 
-    public RequestAps(Context context) {
+    public NextApsRequest(Context context) {
         String filename = "data.json";
         StringBuilder stringBuilder = new StringBuilder();
         File dataFile = new File(context.getFilesDir(), filename);

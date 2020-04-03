@@ -39,7 +39,7 @@ import de.itstall.freifunkfranken.R;
 import de.itstall.freifunkfranken.controller.CustomLocationListener;
 import de.itstall.freifunkfranken.controller.CustomLocationListenerInterface;
 import de.itstall.freifunkfranken.controller.MapsFragmentListener;
-import de.itstall.freifunkfranken.controller.RequestAps;
+import de.itstall.freifunkfranken.controller.NextApsRequest;
 import de.itstall.freifunkfranken.model.AccessPoint;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
@@ -111,7 +111,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void showApsOnMap() {
-        List<AccessPoint> accessPointList = new RequestAps(Objects.requireNonNull(this.getContext())).getSortedList(sharedPreferences.getBoolean("MapOfflineRouter", false), 0);
+        List<AccessPoint> accessPointList = new NextApsRequest(Objects.requireNonNull(this.getContext())).getSortedList(sharedPreferences.getBoolean("MapOfflineRouter", false), 0);
 
         for (int i = 0; i < accessPointList.size(); i++) {
             LatLng ap = new LatLng(accessPointList.get(i).getLat(), accessPointList.get(i).getLon());
