@@ -3,6 +3,7 @@ package de.itstall.freifunkfranken.view;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -14,6 +15,9 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.tabs.TabLayout;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.Objects;
 
 import de.itstall.freifunkfranken.R;
@@ -28,6 +32,11 @@ public class MainActivity extends AppCompatActivity {
     public int selectedTab;
     public SharedPreferences sharedPreferences;
     private TabLayout tabLayout;
+    private String downloadUrl = "https://fff-app.itstall.de/data.json";
+    private String downloadFile = "data.json";
+    private String timestampUrl = "https://fff-app.itstall.de/timestamp.txt";
+    private String timestampFile = "timestamp.txt";
+    private int timestamp = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.addOnTabSelectedListener(mainActivityListener.onTabSelectedListener());
 
         // download datafile with content for app
-        new FileDownloader(this, "https://fff-app.itstall.de/data.json", "data.json").execute();
+        new FileDownloader(this, timestampUrl, timestampFile, getResources().getString(R.string.messageCheckingDataVersion)).execute();
     }
 
     // create new tab and add to layout
@@ -122,5 +131,43 @@ public class MainActivity extends AppCompatActivity {
 
         // select tab
         Objects.requireNonNull(tabLayout.getTabAt(savedTab)).select();
+    }
+
+    // download is done, check what is to do now
+    public void downloadDone(String url) {
+        if (url.equals(this.timestampUrl)) {
+            timestamp = getTimestampFromFile();
+
+            if (timestamp > sharedPreferences.getInt("DataFileTimestamp", 0)) {
+                new FileDownloader(this, downloadUrl, downloadFile, getResources().getString(R.string.messageDownloadingData)).execute();
+            } else {
+                downloadDone = true;
+                loadFragment(getFragment(selectedTab));
+            }
+        } else if (url.equals(this.downloadUrl)) {
+            downloadDone = true;
+            sharedPreferences.edit().putInt("DataFileTimestamp", this.timestamp).apply();
+            loadFragment(getFragment(selectedTab));
+        }
+    }
+
+    // get local saved Datafile timestamp
+    private int getTimestampFromFile() {
+        StringBuilder stringBuilder = new StringBuilder();
+        File dataFile = new File(this.getFilesDir(), timestampFile);
+
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(dataFile));
+            String line;
+
+            while ((line = bufferedReader.readLine()) != null) {
+                stringBuilder.append(line);
+            }
+            bufferedReader.close();
+        } catch (Exception e) {
+            Log.e("ReadWriteFile", "Unable to read file: " + timestampFile);
+        }
+
+        return Integer.parseInt(stringBuilder.toString());
     }
 }

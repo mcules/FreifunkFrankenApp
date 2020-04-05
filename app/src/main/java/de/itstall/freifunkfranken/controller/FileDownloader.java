@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -17,21 +18,25 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Objects;
 
+import de.itstall.freifunkfranken.R;
 import de.itstall.freifunkfranken.view.MainActivity;
 
 // file downloader class. Downloads url to filename
 public class FileDownloader extends AsyncTask<String, Void, String> {
-    private final String filename;
-    private final String downloadUrl;
-    private ProgressDialog progressDialog = null;
+    private static final String TAG = FileDownloader.class.getSimpleName();
     @SuppressLint("StaticFieldLeak")
     private final MainActivity mainActivity;
+    private final String downloadUrl;
+    private final String filename;
+    private ProgressDialog progressDialog = null;
+    private final String message;
 
     // constructor
-    public FileDownloader(MainActivity mainActivity, String downloadUrl, String filename) {
+    public FileDownloader(MainActivity mainActivity, String downloadUrl, String filename, String message) {
         this.mainActivity = mainActivity;
         this.downloadUrl = downloadUrl;
         this.filename = filename;
+        this.message = message;
     }
 
     // start task in background
@@ -45,6 +50,8 @@ public class FileDownloader extends AsyncTask<String, Void, String> {
         BufferedReader reader;
         String line;
         InputStream inputStream;
+
+        if (!checkUrl()) return null;
 
         // try to download file from url
         try {
@@ -60,7 +67,6 @@ public class FileDownloader extends AsyncTask<String, Void, String> {
                 while ((line = reader.readLine()) != null) {
                     stringBuilder.append(line);
                 }
-                Log.i("length", stringBuilder.toString().length() + "");
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
@@ -92,7 +98,7 @@ public class FileDownloader extends AsyncTask<String, Void, String> {
     protected void onPreExecute() {
         super.onPreExecute();
         progressDialog = new ProgressDialog(mainActivity);
-        progressDialog.setMessage("Downloading Data...");
+        progressDialog.setMessage(this.message);
         progressDialog.show();
         progressDialog.setOnCancelListener(arg0 -> FileDownloader.this.cancel(true));
     }
@@ -103,7 +109,24 @@ public class FileDownloader extends AsyncTask<String, Void, String> {
 
         if (progressDialog != null) progressDialog.dismiss();
 
-        mainActivity.downloadDone = true;
-        mainActivity.loadFragment(mainActivity.getFragment(mainActivity.selectedTab));
+        mainActivity.downloadDone(downloadUrl);
+    }
+
+    // check if url is reachable
+    private boolean checkUrl() {
+        int code = 0;
+
+        try {
+            URL url = new URL(this.downloadUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            code = connection.getResponseCode();
+            connection.disconnect();
+        } catch (IOException e) {
+            Toast
+                    .makeText(mainActivity.getApplicationContext(), mainActivity.getApplicationContext().getResources().getString(R.string.errorUrlMalformed), Toast.LENGTH_LONG)
+                    .show();
+        }
+
+        return code == 200;
     }
 }

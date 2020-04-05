@@ -38,4 +38,7 @@
     <string name="noPermissionsGranted">Ohne Berechtigungen kannst du diese Funktion leider nicht nutzen.</string>
     <string name="ssidAddSsidsTitle">SSIDs werden hinzugefügt</string>
     <string name="ssidAddSsidsDescription">Dies kann, je nach Anzahl der SSIDs, eine Weile dauern.</string>
+    <string name="errorUrlMalformed">Es wurde eine ungültige URL angegeben.</string>
+    <string name="messageDownloadingData">"Lade neue Daten..."</string>
+    <string name="messageCheckingDataVersion">Prüfe auf neue Daten...</string>
 </resources>
