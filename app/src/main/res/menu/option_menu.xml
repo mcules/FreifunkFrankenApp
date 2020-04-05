@@ -12,4 +12,9 @@
         android:icon="@android:drawable/ic_menu_info_details"
         android:title="@string/menuItemAbout"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/optionMenuBtnUpdate"
+        android:icon="@android:drawable/ic_popup_sync"
+        android:title="@string/menuItemUpdate"
+        app:showAsAction="ifRoom" />
 </menu>

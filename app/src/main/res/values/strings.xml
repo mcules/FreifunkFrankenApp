@@ -40,4 +40,5 @@
     <string name="errorUrlMalformed">Es wurde eine ungültige URL angegeben.</string>
     <string name="messageDownloadingData">"Lade neue Daten…"</string>
     <string name="messageCheckingDataVersion">Prüfe auf neue Daten…</string>
+    <string name="menuItemUpdate">Update</string>
 </resources>

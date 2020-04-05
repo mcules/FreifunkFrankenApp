@@ -55,7 +55,11 @@ public class MainActivity extends AppCompatActivity {
 
         tabLayout.addOnTabSelectedListener(mainActivityListener.onTabSelectedListener());
 
-        // download datafile with content for app
+        updateData();
+    }
+
+    // download datafile with content for app
+    private void updateData() {
         new FileDownloader(this, timestampUrl, timestampFile, getResources().getString(R.string.messageCheckingDataVersion)).execute();
     }
 
@@ -82,6 +86,9 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.optionMenuBtnSettings:
                 startActivity(new Intent(this, SettingsActivity.class));
+                return true;
+            case R.id.optionMenuBtnUpdate:
+                updateData();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
