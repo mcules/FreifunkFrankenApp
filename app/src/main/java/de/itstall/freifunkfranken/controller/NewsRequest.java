@@ -18,7 +18,7 @@ import de.itstall.freifunkfranken.model.News;
 
 // request news from datafile
 public class NewsRequest {
-    private static final String TAG = NewsRequest.class.getSimpleName();
+    // --Commented out by Inspection (05.04.2020 22:13):private static final String TAG = NewsRequest.class.getSimpleName();
     private final List<News> newsList = new ArrayList<>();
 
     // constructor

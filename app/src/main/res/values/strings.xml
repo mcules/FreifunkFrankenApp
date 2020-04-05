@@ -35,7 +35,6 @@
     <string name="ssidSuggestionsAddedTitle">SSIDs hinzugefügt</string>
     <string name="ssidSuggestionsAddedDescription">Du solltest gleich (kann ein wenig dauern) eine Benachrichtigung von deinem Gerät erhalten. Bitte bestätige hier die Frage zur Verbindung um das hinzufügen abzuschließen.</string>
     <string name="okay">Okay</string>
-    <string name="noPermissionsGranted">Ohne Berechtigungen kannst du diese Funktion leider nicht nutzen.</string>
     <string name="ssidAddSsidsTitle">SSIDs werden hinzugefügt</string>
     <string name="ssidAddSsidsDescription">Dies kann, je nach Anzahl der SSIDs, eine Weile dauern.</string>
     <string name="errorUrlMalformed">Es wurde eine ungültige URL angegeben.</string>

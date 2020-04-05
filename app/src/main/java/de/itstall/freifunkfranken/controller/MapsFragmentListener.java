@@ -27,6 +27,7 @@ public class MapsFragmentListener implements GoogleMap.OnCameraIdleListener {
             }
 
             // provider was disabled. Show intent with location settings
+            @SuppressWarnings("unused")
             @Override
             public void onProviderDisabled(String provider) {
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);

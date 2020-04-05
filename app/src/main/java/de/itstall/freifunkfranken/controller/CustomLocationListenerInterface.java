@@ -11,18 +11,21 @@ public class CustomLocationListenerInterface implements LocationListenerInterfac
     }
 
     // status has changed
+    @SuppressWarnings("unused")
     @Override
     public void onStatusChanged(String provider) {
 
     }
 
     // provider enabled now
+    @SuppressWarnings("unused")
     @Override
     public void onProviderEnabled(String provider) {
 
     }
 
     // provider disabled now
+    @SuppressWarnings("unused")
     @Override
     public void onProviderDisabled(String provider) {
 

@@ -26,14 +26,14 @@ import de.itstall.freifunkfranken.controller.MainActivityListener;
 
 // main activity, no more explanation required i think
 public class MainActivity extends AppCompatActivity {
-    private static final String TAG = MainActivity.class.getSimpleName();
-    private Fragment fragment = null;
+    private final String timestampUrl = "https://fff-app.itstall.de/timestamp.txt";
     public boolean downloadDone = false;
     public int selectedTab;
     public SharedPreferences sharedPreferences;
     private TabLayout tabLayout;
-    private String timestampUrl = "https://fff-app.itstall.de/timestamp.txt";
-    private String timestampFile = "timestamp.txt";
+    private final String timestampFile = "timestamp.txt";
+    // --Commented out by Inspection (05.04.2020 22:12):private static final String TAG = MainActivity.class.getSimpleName();
+    private Fragment fragment = null;
     private int timestamp = 0;
 
     @Override

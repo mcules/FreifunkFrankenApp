@@ -21,7 +21,7 @@ import de.itstall.freifunkfranken.view.NextApFragment;
 // request next accesspoint list from datafile
 public class NextApsRequest {
     private final List<AccessPoint> accessPointList = new ArrayList<>();
-    private static final String TAG = NextApsRequest.class.getSimpleName();
+    // --Commented out by Inspection (05.04.2020 22:13):private static final String TAG = NextApsRequest.class.getSimpleName();
 
     // constructor
     public NextApsRequest(Context context) {

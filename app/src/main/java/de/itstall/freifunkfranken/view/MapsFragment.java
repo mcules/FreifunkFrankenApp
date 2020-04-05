@@ -1,6 +1,7 @@
 package de.itstall.freifunkfranken.view;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -43,7 +44,7 @@ import de.itstall.freifunkfranken.controller.NextApsRequest;
 import de.itstall.freifunkfranken.model.AccessPoint;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
-    private static final String TAG = MapsFragment.class.getSimpleName();
+    // --Commented out by Inspection (05.04.2020 22:12):private static final String TAG = MapsFragment.class.getSimpleName();
     public GoogleMap mMap;
     public SharedPreferences sharedPreferences;
     private View rootView;
@@ -129,6 +130,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;

@@ -18,7 +18,7 @@ import de.itstall.freifunkfranken.model.News;
 
 // Adapter to get news into recyclerview
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
-    private static final String TAG = NewsAdapter.class.getSimpleName();
+    // --Commented out by Inspection (05.04.2020 22:12):private static final String TAG = NewsAdapter.class.getSimpleName();
     private final List<News> newsList;
 
     // constructor adds newsList to class variable

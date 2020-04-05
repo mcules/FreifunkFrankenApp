@@ -21,7 +21,7 @@ import de.itstall.freifunkfranken.model.Ssid;
 
 // Shows the SSID list and adds to mobile
 public class SsidsFragment extends androidx.fragment.app.Fragment {
-    private static final String TAG = SsidsFragment.class.getSimpleName();
+    // --Commented out by Inspection (05.04.2020 22:13):private static final String TAG = SsidsFragment.class.getSimpleName();
     public static List<Ssid> ssidList;
     private RecyclerView rvSsids;
 

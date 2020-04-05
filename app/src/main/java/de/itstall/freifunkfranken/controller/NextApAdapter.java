@@ -17,7 +17,7 @@ import de.itstall.freifunkfranken.model.AccessPoint;
 
 // binds accesspoints to view
 public class NextApAdapter extends RecyclerView.Adapter<NextApAdapter.ViewHolder> {
-    private static final String TAG = NextApAdapter.class.getSimpleName();
+    // --Commented out by Inspection (05.04.2020 22:13):private static final String TAG = NextApAdapter.class.getSimpleName();
     private final List<AccessPoint> accessPointList;
     private OnItemClicked onClick;
 

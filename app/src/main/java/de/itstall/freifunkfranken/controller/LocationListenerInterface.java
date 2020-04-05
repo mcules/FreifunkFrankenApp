@@ -8,11 +8,14 @@ interface LocationListenerInterface {
     void onLocationChanged(Location location);
 
     // status has changed
-    void onStatusChanged(String provider);
+    @SuppressWarnings("EmptyMethod")
+    void onStatusChanged(@SuppressWarnings("unused") String provider);
 
     // provider enabled
-    void onProviderEnabled(String provider);
+    @SuppressWarnings("EmptyMethod")
+    void onProviderEnabled(@SuppressWarnings("unused") String provider);
 
     // provider disabled
-    void onProviderDisabled(String provider);
+    @SuppressWarnings("unused")
+    void onProviderDisabled(@SuppressWarnings("unused") String provider);
 }

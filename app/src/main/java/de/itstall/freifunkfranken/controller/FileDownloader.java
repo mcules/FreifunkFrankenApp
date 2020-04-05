@@ -23,7 +23,7 @@ import de.itstall.freifunkfranken.view.MainActivity;
 
 // file downloader class. Downloads url to filename
 public class FileDownloader extends AsyncTask<String, Void, String> {
-    private static final String TAG = FileDownloader.class.getSimpleName();
+    // --Commented out by Inspection (05.04.2020 22:12):private static final String TAG = FileDownloader.class.getSimpleName();
     @SuppressLint("StaticFieldLeak")
     private final MainActivity mainActivity;
     private final String downloadUrl;
@@ -75,7 +75,8 @@ public class FileDownloader extends AsyncTask<String, Void, String> {
                 // save file to local storage
                 try {
                     saveFile = new File(Objects.requireNonNull(mainActivity).getFilesDir(), filename);
-                    if (!saveFile.exists()) saveFile.createNewFile();
+                    if (!saveFile.exists()) //noinspection ResultOfMethodCallIgnored
+                        saveFile.createNewFile();
 
                     writer = new BufferedWriter(new FileWriter(saveFile, false));
                     writer.write(stringBuilder.toString());
