@@ -32,8 +32,6 @@ public class MainActivity extends AppCompatActivity {
     public int selectedTab;
     public SharedPreferences sharedPreferences;
     private TabLayout tabLayout;
-    private String downloadUrl = "https://fff-app.itstall.de/data.json";
-    private String downloadFile = "data.json";
     private String timestampUrl = "https://fff-app.itstall.de/timestamp.txt";
     private String timestampFile = "timestamp.txt";
     private int timestamp = 0;
@@ -135,16 +133,18 @@ public class MainActivity extends AppCompatActivity {
 
     // download is done, check what is to do now
     public void downloadDone(String url) {
+        String downloadUrl = "https://fff-app.itstall.de/data.json";
         if (url.equals(this.timestampUrl)) {
             timestamp = getTimestampFromFile();
 
             if (timestamp > sharedPreferences.getInt("DataFileTimestamp", 0)) {
+                String downloadFile = "data.json";
                 new FileDownloader(this, downloadUrl, downloadFile, getResources().getString(R.string.messageDownloadingData)).execute();
             } else {
                 downloadDone = true;
                 loadFragment(getFragment(selectedTab));
             }
-        } else if (url.equals(this.downloadUrl)) {
+        } else if (url.equals(downloadUrl)) {
             downloadDone = true;
             sharedPreferences.edit().putInt("DataFileTimestamp", this.timestamp).apply();
             loadFragment(getFragment(selectedTab));
