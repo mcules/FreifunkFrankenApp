@@ -3,6 +3,5 @@
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
     <color name="freifunk_magenta">#FFdc0067</color>
-    <color name="freifunk_yellow">#FFFFB400</color>
     <color name="freifunk_blue">#FF009EE0</color>
 </resources>

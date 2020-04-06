@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -24,27 +23,19 @@ import java.io.FileReader;
 
 import de.itstall.freifunkfranken.R;
 import de.itstall.freifunkfranken.controller.FileDownloader;
-import de.itstall.freifunkfranken.controller.MainActivityListener;
 
 // main activity, no more explanation required i think
 public class MainActivity extends AppCompatActivity {
     private final String timestampUrl = "https://fff-app.itstall.de/timestamp.txt";
-    public boolean downloadDone = false;
-    public int selectedTab;
     public SharedPreferences sharedPreferences;
     private final String timestampFile = "timestamp.txt";
-    public static String currentFragmentString = null;
     private int timestamp = 0;
     private AppBarConfiguration mAppBarConfiguration;
-    private NavController navController;
-    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        MainActivityListener mainActivityListener = new MainActivityListener(this);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -53,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferences = this.getApplicationContext().getSharedPreferences(getResources().getString(R.string.app_name), 0);
 
         DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
-        navigationView = findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.newsNav,
@@ -64,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
                 R.id.vpnNav)
                 .setDrawerLayout(drawerLayout)
                 .build();
-        navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
@@ -80,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration) || super.onSupportNavigateUp();
     }
 
@@ -111,13 +102,11 @@ public class MainActivity extends AppCompatActivity {
                 String downloadFile = "data.json";
                 new FileDownloader(this, downloadUrl, downloadFile, getResources().getString(R.string.messageDownloadingData)).execute();
             } else {
-                downloadDone = true;
-                //loadFragment(getFragment(selectedTab));
+                onResume();
             }
         } else if (url.equals(downloadUrl)) {
-            downloadDone = true;
             sharedPreferences.edit().putInt("DataFileTimestamp", this.timestamp).apply();
-            //loadFragment(getFragment(selectedTab));
+            onResume();
         }
     }
 
@@ -144,11 +133,6 @@ public class MainActivity extends AppCompatActivity {
     // download datafile with content for app
     private void updateData() {
         new FileDownloader(this, timestampUrl, timestampFile, getResources().getString(R.string.messageCheckingDataVersion)).execute();
-    }
-
-    public Fragment getForegroundFragment() {
-        Fragment navHostFragment = getSupportFragmentManager().findFragmentById(R.id.nav_view);
-        return navHostFragment == null ? null : navHostFragment.getChildFragmentManager().getFragments().get(0);
     }
 
     @Override
