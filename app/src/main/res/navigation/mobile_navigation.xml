@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/newsNav"
+    tools:ignore="UnusedNavigation">
+
+    <fragment
+        android:id="@+id/newsNav"
+        android:name="de.itstall.freifunkfranken.view.NewsFragment"
+        android:label="@string/tabNews"
+        tools:layout="@layout/news_fragment" />
+
+    <fragment
+        android:id="@+id/nextApNav"
+        android:name="de.itstall.freifunkfranken.view.NextApFragment"
+        android:label="@string/tabNextAp"
+        tools:layout="@layout/nextap_fragment" />
+
+    <fragment
+        android:id="@+id/karteNav"
+        android:name="de.itstall.freifunkfranken.view.MapsFragment"
+        android:label="@string/tabKarte"
+        tools:layout="@layout/maps_fragment" />
+
+    <fragment
+        android:id="@+id/ssidsNav"
+        android:name="de.itstall.freifunkfranken.view.SsidsFragment"
+        android:label="@string/tabSsids"
+        tools:layout="@layout/ssids_fragment" />
+
+    <fragment
+        android:id="@+id/wikiNav"
+        android:name="de.itstall.freifunkfranken.view.WikiFragment"
+        android:label="@string/tabWiki"
+        tools:layout="@layout/wiki_fragment" />
+
+    <fragment
+        android:id="@+id/vpnNav"
+        android:name="de.itstall.freifunkfranken.view.VpnFragment"
+        android:label="@string/tabVpn"
+        tools:layout="@layout/vpn_fragment" />
+</navigation>

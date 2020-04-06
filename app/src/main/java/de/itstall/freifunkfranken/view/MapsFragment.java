@@ -44,7 +44,6 @@ import de.itstall.freifunkfranken.controller.NextApsRequest;
 import de.itstall.freifunkfranken.model.AccessPoint;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
-    // --Commented out by Inspection (05.04.2020 22:12):private static final String TAG = MapsFragment.class.getSimpleName();
     public GoogleMap mMap;
     public SharedPreferences sharedPreferences;
     private View rootView;
@@ -55,6 +54,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private CustomLocationListenerInterface locationListener;
     private MapsFragmentListener mapsFragmentListener;
     private boolean permissionsGranted;
+    private boolean wasLoaded = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -151,6 +151,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         showApsOnMap();
 
         if (progressDialog != null) progressDialog.dismiss();
+        wasLoaded = true;
     }
 
     @Override
@@ -163,6 +164,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onResume() {
         super.onResume();
+        if (wasLoaded) {
+            mMap.clear();
+            showApsOnMap();
+        }
         // get current location
         getLocation();
     }

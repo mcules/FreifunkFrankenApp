@@ -46,6 +46,7 @@ public class NextApFragment extends Fragment implements NextApAdapter.OnItemClic
     private LocationManager locationManager;
     private List<AccessPoint> accessPointList;
     private String locationProvider;
+    private SharedPreferences sharedPreferences;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,7 +57,7 @@ public class NextApFragment extends Fragment implements NextApAdapter.OnItemClic
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.nextap_fragment, container, false);
 
-        SharedPreferences sharedPreferences = rootView.getContext().getSharedPreferences(getResources().getString(R.string.app_name), 0);
+        sharedPreferences = rootView.getContext().getSharedPreferences(getResources().getString(R.string.app_name), 0);
 
         rvAps = rootView.findViewById(R.id.rvAps);
         rvAps.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -65,7 +66,13 @@ public class NextApFragment extends Fragment implements NextApAdapter.OnItemClic
 
         checkPermissions();
 
-        // Get accesspoint list sorted by distance
+        getAccessPointList();
+
+        return rootView;
+    }
+
+    // Get accesspoint list sorted by distance
+    private void getAccessPointList() {
         accessPointList = new NextApsRequest(
                 Objects.requireNonNull(this.getContext())).
                 getSortedList(
@@ -74,8 +81,6 @@ public class NextApFragment extends Fragment implements NextApAdapter.OnItemClic
                 );
 
         showApList(accessPointList);
-
-        return rootView;
     }
 
     // request and check permissions
@@ -155,5 +160,11 @@ public class NextApFragment extends Fragment implements NextApAdapter.OnItemClic
             return null;
         }
         return bestProvider;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getAccessPointList();
     }
 }

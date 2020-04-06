@@ -5,20 +5,22 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
-import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.navigation.NavigationView;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.Objects;
 
 import de.itstall.freifunkfranken.R;
 import de.itstall.freifunkfranken.controller.FileDownloader;
@@ -30,11 +32,12 @@ public class MainActivity extends AppCompatActivity {
     public boolean downloadDone = false;
     public int selectedTab;
     public SharedPreferences sharedPreferences;
-    private TabLayout tabLayout;
     private final String timestampFile = "timestamp.txt";
-    // --Commented out by Inspection (05.04.2020 22:12):private static final String TAG = MainActivity.class.getSimpleName();
-    private Fragment fragment = null;
+    public static String currentFragmentString = null;
     private int timestamp = 0;
+    private AppBarConfiguration mAppBarConfiguration;
+    private NavController navController;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,39 +46,42 @@ public class MainActivity extends AppCompatActivity {
 
         MainActivityListener mainActivityListener = new MainActivityListener(this);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         // get preferences
         sharedPreferences = this.getApplicationContext().getSharedPreferences(getResources().getString(R.string.app_name), 0);
-        tabLayout = findViewById(R.id.tabLayout);
 
-        // create app tabs
-        createTab(getResources().getString(R.string.tabNews));
-        createTab(getResources().getString(R.string.tabNextAp));
-        createTab(getResources().getString(R.string.tabKarte));
-        createTab(getResources().getString(R.string.tabSsids));
+        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
 
-        tabLayout.addOnTabSelectedListener(mainActivityListener.onTabSelectedListener());
+        mAppBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.newsNav,
+                R.id.nextApNav,
+                R.id.karteNav,
+                R.id.ssidsNav,
+                R.id.wikiNav,
+                R.id.vpnNav)
+                .setDrawerLayout(drawerLayout)
+                .build();
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+        NavigationUI.setupWithNavController(navigationView, navController);
 
         updateData();
     }
 
-    // download datafile with content for app
-    private void updateData() {
-        new FileDownloader(this, timestampUrl, timestampFile, getResources().getString(R.string.messageCheckingDataVersion)).execute();
-    }
-
-    // create new tab and add to layout
-    private void createTab(String tabName) {
-        TabLayout.Tab newTab = tabLayout.newTab();
-        newTab.setText(tabName);
-        tabLayout.addTab(newTab);
-    }
-
     // creates the options menu
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.option_menu, menu);
+        getMenuInflater().inflate(R.menu.option_menu, menu);
 
         return true;
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        return NavigationUI.navigateUp(navController, mAppBarConfiguration) || super.onSupportNavigateUp();
     }
 
     // option menu item clicked
@@ -95,49 +101,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // check which fragment was clicked and return fragment class
-    public Fragment getFragment(int selectedTab) {
-        switch (selectedTab) {
-            case 0:
-                fragment = new NewsFragment();
-                break;
-            case 1:
-                fragment = new NextApFragment();
-                break;
-            case 2:
-                fragment = new MapsFragment();
-                break;
-            case 3:
-                fragment = new SsidsFragment();
-        }
-
-        return fragment;
-    }
-
-    // load given fragment
-    public void loadFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager
-                .beginTransaction()
-                .replace(R.id.frameLayout, fragment)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .commit();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // get saved tab from preferences
-        int savedTab = sharedPreferences.getInt("selectedTab", 0);
-
-        // reload Tab
-        if (savedTab == 0) Objects.requireNonNull(tabLayout.getTabAt(1)).select();
-        else Objects.requireNonNull(tabLayout.getTabAt(0)).select();
-
-        // select tab
-        Objects.requireNonNull(tabLayout.getTabAt(savedTab)).select();
-    }
-
     // download is done, check what is to do now
     public void downloadDone(String url) {
         String downloadUrl = "https://fff-app.itstall.de/data.json";
@@ -149,12 +112,12 @@ public class MainActivity extends AppCompatActivity {
                 new FileDownloader(this, downloadUrl, downloadFile, getResources().getString(R.string.messageDownloadingData)).execute();
             } else {
                 downloadDone = true;
-                loadFragment(getFragment(selectedTab));
+                //loadFragment(getFragment(selectedTab));
             }
         } else if (url.equals(downloadUrl)) {
             downloadDone = true;
             sharedPreferences.edit().putInt("DataFileTimestamp", this.timestamp).apply();
-            loadFragment(getFragment(selectedTab));
+            //loadFragment(getFragment(selectedTab));
         }
     }
 
@@ -176,5 +139,20 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return Integer.parseInt(stringBuilder.toString());
+    }
+
+    // download datafile with content for app
+    private void updateData() {
+        new FileDownloader(this, timestampUrl, timestampFile, getResources().getString(R.string.messageCheckingDataVersion)).execute();
+    }
+
+    public Fragment getForegroundFragment() {
+        Fragment navHostFragment = getSupportFragmentManager().findFragmentById(R.id.nav_view);
+        return navHostFragment == null ? null : navHostFragment.getChildFragmentManager().getFragments().get(0);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 }

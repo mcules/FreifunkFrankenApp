@@ -22,8 +22,8 @@ public class MainActivityListener {
             public void onTabSelected(TabLayout.Tab tab) {
                 mainActivity.selectedTab = tab.getPosition();
                 if (mainActivity.downloadDone)
-                    mainActivity.loadFragment(mainActivity.getFragment(mainActivity.selectedTab));
-                // save new tab to preferences
+                    //mainActivity.loadFragment(mainActivity.getFragment(mainActivity.selectedTab));
+                    // save new tab to preferences
                 mainActivity.sharedPreferences.edit().putInt("selectedTab", mainActivity.selectedTab).apply();
             }
 

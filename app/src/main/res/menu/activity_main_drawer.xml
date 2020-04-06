@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/newsNav"
+            android:title="@string/tabNews" />
+        <item
+            android:id="@+id/nextApNav"
+            android:title="@string/tabNextAp" />
+        <item
+            android:id="@+id/karteNav"
+            android:title="@string/tabKarte" />
+        <item
+            android:id="@+id/ssidsNav"
+            android:title="@string/tabSsids" />
+        <item
+            android:id="@+id/wikiNav"
+            android:title="@string/tabWiki" />
+        <item
+            android:id="@+id/vpnNav"
+            android:title="@string/tabVpn" />
+    </group>
+</menu>

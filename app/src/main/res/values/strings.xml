@@ -10,6 +10,7 @@
     <string name="statusOffline">Offline</string>
     <string name="menuItemSettings">Einstellungen</string>
     <string name="menuItemAbout">Info</string>
+    <string name="menuItemUpdate">Update</string>
     <string name="btnClose">Schließen</string>
     <string name="settingsTvOfflineRouter">Zeige offline Router an</string>
     <string name="settingsTvRouterCount">Anzahl der anzuzeigenden Router</string>
@@ -40,5 +41,8 @@
     <string name="errorUrlMalformed">Es wurde eine ungültige URL angegeben.</string>
     <string name="messageDownloadingData">"Lade neue Daten…"</string>
     <string name="messageCheckingDataVersion">Prüfe auf neue Daten…</string>
-    <string name="menuItemUpdate">Update</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="tabWiki">Wiki</string>
+    <string name="tabVpn">VPN</string>
+    <string name="vpnNav">VPN</string>
 </resources>

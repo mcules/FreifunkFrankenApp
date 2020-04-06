@@ -34,11 +34,15 @@ public class NewsFragment extends Fragment {
         rvNews = rootView.findViewById(R.id.rvNews);
         rvNews.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        getNewsList();
+
+        return rootView;
+    }
+
+    private void getNewsList() {
         // get list from json file
         List<News> newsList = new NewsRequest(Objects.requireNonNull(this.getContext())).getNewsList();
         showNewsList(newsList);
-
-        return rootView;
     }
 
     // bind list to view
@@ -46,5 +50,11 @@ public class NewsFragment extends Fragment {
         NewsAdapter newsAdapter = new NewsAdapter(newsList);
         rvNews.setAdapter(newsAdapter);
         rvNews.setItemAnimator(new DefaultItemAnimator());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getNewsList();
     }
 }
